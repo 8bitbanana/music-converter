@@ -7,6 +7,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtSvg import *
 from mutagen.mp3 import EasyMP3
 
+# this is a test to test PyCharm and github
+
 # - remove punctuation from youtube title (maybe)
 # - try/except a bunch of stuff with error messages
 # - make error messages more user friendly
