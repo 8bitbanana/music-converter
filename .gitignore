@@ -1,4 +1,4 @@
 /.vs*
-/.idea*
 /build*
+/dist*
 .DS_STORE
