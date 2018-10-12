@@ -1,0 +1,15 @@
+
+=== MAIN ===
+ 1) Search for the artist name first - then search for the track within that artist name
+ 2) For each artist, from most likely to be correct to least, get every album.
+ 3) Search through each album for the track you want.
+ 4) If you found it, you are done. If not, go to the next artist and start from step 1.
+
+
+=== GETTING ARTIST NAME ===
+Search these, in this order:
+ 1) Whole channel name
+ 2) Powerset of channel name
+ 3) Powerset of video title
+The order of these shows the priority, so if an artist is returned by option 1, don't query
+the powersets until this artist has been searched for the track title.

@@ -1,0 +1,76 @@
+Index: apicontrol.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- apicontrol.py	(date 1534762932737)
++++ apicontrol.py	(date 1534762932737)
+@@ -113,7 +113,7 @@
+     items = []
+     for page in range(PAGINATION_PAGES):
+         r = makeRequest(url, *args, **kwargs)
+-        data = json.loads(r.content)
++        data = json.loads(r.text)
+         items += data['items']
+         nextPage = data['next']
+         if nextPage:
+@@ -126,7 +126,7 @@
+     playlists = {}
+     headers = {"authorization":"Bearer "+auth.token}
+     r = makeRequest("https://api.spotify.com/v1/me/playlists", "get", headers=headers)
+-    data = json.loads(r.content)
++    data = json.loads(r.text)
+     for item in data['items']:
+         playlists[item['name']] = spotify_read_playlist(auth, item['tracks']['href']) # returns whole api url, not just the playlist id
+     return playlists
+@@ -137,7 +137,7 @@
+         "authorization": "Bearer " + auth.token,
+     }
+     r = makeRequest(url, "get", headers=headers) # whole url is passed as parameter
+-    data = json.loads(r.content)
++    data = json.loads(r.text)
+     for track in data['items']:
+         track = track['track']
+         new_track = Track(
+@@ -168,7 +168,7 @@
+         "public":public
+     }
+     r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists", "post", 201, json=data, headers=headers)
+-    playlist_id = json.loads(r.content)['id']
++    playlist_id = json.loads(r.text)['id']
+     data = {"uris":ids}
+     r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists/" + playlist_id + "/tracks", "post", 201, json=data, headers=headers)
+     return playlist_id
+@@ -198,7 +198,7 @@
+         },
+     }
+     r = makeRequest("https://www.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus", "post", 200, headers=headers, json=data)
+-    playlist_id = json.loads(r.content)['id']
++    playlist_id = json.loads(r.text)['id']
+     for video in ids:
+         data = {
+             "kind": "youtube#playlistItem",
+@@ -220,7 +220,7 @@
+         "authorization": "Bearer " + auth.token
+     }
+     r = makeRequest("https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true", "get", headers=headers)
+-    data = json.loads(r.content)
++    data = json.loads(r.text)
+     for item in data['items']:
+         playlists[item['snippet']['title']] = youtube_read_playlist(auth, item['id'])
+     return playlists
+@@ -231,12 +231,12 @@
+         "authorization": "Bearer " + auth.token
+     }
+     r = makeRequest("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&playlistId=" + playlist_id, "get", headers=headers)
+-    data = json.loads(r.content)
++    data = json.loads(r.text)
+     ids_str = ""
+     for item in data['items']:
+         ids_str += item['contentDetails']['videoId'] + "%2C"
+     r = makeRequest("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + ids_str, "get", headers=headers)
+-    videoData = json.loads(r.content)
++    videoData = json.loads(r.text)
+     for item in videoData['items']:
+         track = Track(
+             item['snippet']['title'],
