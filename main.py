@@ -224,7 +224,6 @@ class MainWindow(QWidget):
         editMenu = menuBar.addMenu("&Edit")
         undoAction = editMenu.addAction("&Undo")
         redoAction = editMenu.addAction("&Redo")
-        tableEditAction = editMenu.addAction("&Edit Tracks") # todo - edit tracks
         tableReorderAction = editMenu.addAction("&Reorder Tracks")
         tableShuffleAction = editMenu.addAction("&Shuffle Tracks")
 
@@ -237,9 +236,9 @@ class MainWindow(QWidget):
         managePlaylistsAction = accountsMenu.addAction("Manage &Playlists")
         wipeLoginsAction = accountsMenu.addAction("&Wipe Accounts")
 
-        debugAction = menuBar.addAction("Debug")
+        #debugAction = menuBar.addAction("Debug")
         #debugAction.triggered.connect(lambda: importLocalButton.setFixedWidth(spotifyFetchStack.width()))
-        debugAction.setEnabled(False)
+        #debugAction.setEnabled(False)
 
         self.menuBar = menuBar
 
@@ -269,9 +268,7 @@ class MainWindow(QWidget):
         upperHBox = QHBoxLayout()
         #upperHBox.addStretch(1)
         upperHBox.addLayout(leftVBox)
-        #upperHBox.addWidget(importArrow) # todo - arrows maybe
         upperHBox.addWidget(table)
-        #upperHBox.addWidget(exportArrow)
         upperHBox.addLayout(rightVBox)
         #upperHBox.addStretch(1)
 
@@ -374,7 +371,6 @@ class MainWindow(QWidget):
                     saveButton,
                     spotifyFetchStack,
                     youtubeFetchStack,
-                    tableEditAction
                 ]
             ],
             'multipleTracks': [
