@@ -1,14 +1,18 @@
 import requests, json, os
 from urllib.parse import quote, unquote
 
-client_id = "251705760801-5o6ihfj26i59d171n81koolor0d6i6al.apps.googleusercontent.com"
-client_secret = "AVccUHwJF81bmINoVXbIBCj-"
+creds_file = "api_creds.json"
+with open(creds_file) as f:
+    data = json.loads(f.read())
+    client_id = data['youtube']['client_id']
+    client_secret = data['youtube']['client_secret']
+
 redirect_uri = "https://localhost/"
 auth_filename = "data/youtube_auth.json"
 
 head, tail = os.path.split(auth_filename)
 if head and not os.path.isdir(head): os.makedirs(head)
-if not os.path.isfile(tail):
+if not os.path.isfile(auth_filename):
     with open(auth_filename, "w") as f:
         f.write("[]")
 

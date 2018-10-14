@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="" />
+    <list id="7b7c69a5-38a2-40dc-871d-06a31c281528" name="removed all svg arrows" comment="removed all svg arrows&#10;&#10;(cherry picked from commit 9cb9406)">
+      <changelist_data name="8bitbanana" email="30533393+8bitbanana@users.noreply.github.com" date="1539515646000" />
+    </list>
+    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="removed all svg arrows&#10;&#10;(cherry picked from commit 9cb9406dc6f7203d761999b11ff01e62161762e5)">
+      <change afterPath="$PROJECT_DIR$/api_creds.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/spotify_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/spotify_auth.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/youtube_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/youtube_auth.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/youtube.py" beforeDir="false" afterPath="$PROJECT_DIR$/youtube.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,13 +27,20 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+            <state relative-caret-position="886">
+              <caret line="266" column="40" lean-forward="true" selection-start-line="266" selection-start-column="40" selection-end-line="266" selection-end-column="40" />
               <folding>
-                <element signature="e#288#337#0" />
-                <element signature="e#1296#1394#0" />
-                <element signature="e#1435#1605#0" />
+                <element signature="e#0#62#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="api_creds.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/api_creds.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="6" column="89" selection-start-line="6" selection-start-column="89" selection-end-line="6" selection-end-column="89" />
             </state>
           </provider>
         </entry>
@@ -31,8 +48,8 @@
       <file leaf-file-name="youtube.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/youtube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+            <state relative-caret-position="409">
+              <caret line="248" selection-start-line="248" selection-end-line="248" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -43,7 +60,7 @@
       <file leaf-file-name="apicontrol.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apicontrol.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2992">
+            <state relative-caret-position="836">
               <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
             </state>
           </provider>
@@ -53,7 +70,7 @@
         <entry file="file://$PROJECT_DIR$/spotify.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="238">
-              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -61,11 +78,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="search.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="search.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/search.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+              <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -114,6 +131,9 @@
       <find>failed to</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -128,10 +148,12 @@
         <option value="$PROJECT_DIR$/service_test.py" />
         <option value="$PROJECT_DIR$/apicontrol.py" />
         <option value="$PROJECT_DIR$/help.xml" />
-        <option value="$PROJECT_DIR$/spotify.py" />
-        <option value="$PROJECT_DIR$/youtube.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/search.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/api_keys.json" />
+        <option value="$PROJECT_DIR$/youtube.py" />
+        <option value="$PROJECT_DIR$/spotify.py" />
+        <option value="$PROJECT_DIR$/api_creds.json" />
       </list>
     </option>
   </component>
@@ -145,7 +167,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -153,10 +174,16 @@
               <item name="universal-music" type="b2602c69:ProjectViewProjectNode" />
               <item name="universal-music" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="universal-music" type="b2602c69:ProjectViewProjectNode" />
+              <item name="universal-music" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -304,6 +331,14 @@
       <option name="presentableId" value="Default" />
       <updated>1533907786671</updated>
     </task>
+    <task id="LOCAL-00001" summary="removed all svg arrows">
+      <created>1539515647060</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1539515647060</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -319,34 +354,74 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" weight="0.37636763" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.17590618" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.2167756" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" weight="0.32897604" />
-      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
-      <window_info active="true" anchor="right" id="Python Console" order="4" visible="true" weight="0.42643923" />
       <window_info anchor="right" id="Run" order="5" weight="0.44402984" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.32897604" />
+      <window_info anchor="right" id="Python Console" order="4" weight="0.42643923" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.6013072" />
+      <window_info active="true" anchor="right" id="Debug" order="3" visible="true" weight="0.4184435" />
       <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
-      <window_info anchor="right" id="Debug" order="3" weight="0.4184435" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="3" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
+      <window_info anchor="bottom" id="Message" order="3" />
     </layout>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="removed all svg arrows" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed all svg arrows" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="117" />
+      <option name="time" value="121" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -384,13 +459,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/apicontrol.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="80" column="31" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -610,13 +678,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/spotify_auth.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" selection-start-column="2" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/playlists_shuffle.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -676,52 +737,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/youtube.py">
+    <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+        <state relative-caret-position="153">
+          <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#54#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="886">
+          <caret line="266" column="40" lean-forward="true" selection-start-line="266" selection-start-column="40" selection-end-line="266" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/spotify_auth.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apicontrol.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="836">
+          <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spotify.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apicontrol.py">
+    <entry file="file://$PROJECT_DIR$/youtube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2992">
-          <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+        <state relative-caret-position="409">
+          <caret line="248" selection-start-line="248" selection-end-line="248" />
           <folding>
-            <element signature="e#288#337#0" />
-            <element signature="e#1296#1394#0" />
-            <element signature="e#1435#1605#0" />
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/search.py">
+    <entry file="file://$PROJECT_DIR$/api_creds.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="102">
+          <caret line="6" column="89" selection-start-line="6" selection-start-column="89" selection-end-line="6" selection-end-column="89" />
         </state>
       </provider>
     </entry>

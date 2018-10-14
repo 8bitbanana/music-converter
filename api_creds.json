@@ -1,0 +1,10 @@
+{
+  "spotify":{
+    "client_id":"b3031464e5b346f1bd8d6b6dc5c23619",
+    "client_secret":"6c83a27591604965a1722975e755c720"
+  },
+  "youtube":{
+    "client_id":"251705760801-5o6ihfj26i59d171n81koolor0d6i6al.apps.googleusercontent.com",
+    "client_secret":"AVccUHwJF81bmINoVXbIBCj-"
+  }
+}
