@@ -7,14 +7,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtSvg import *
 from mutagen.mp3 import EasyMP3
 
-# - remove punctuation from youtube title (maybe)
-# - try/except a bunch of stuff with error messages
-# - make error messages more user friendly
-# - Automatic Sync
-# - Redo updating loading bar animation
-# - Import playlists specified by id (search?)
-# - Settings?
-
 PROGRAM_NAME = "Universal Music"
 PROGRAM_AUTHOR = "Ethan Crooks"
 TABLE_COLUMN_WIDTH = 150
