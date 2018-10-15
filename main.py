@@ -868,10 +868,16 @@ class TrackSearchDialog(QDialog):
         if not self.sAuth: self.tableSetEnabled(spotifyTable, False, "Logged Out")
         if not self.yAuth: self.tableSetEnabled(youtubeTable, False, "Logged Out")
 
+        searchComboBox = QComboBox()
+        searchComboBox.insertItem(0, "Tracks")
+        searchComboBox.insertItem(1, "Playlists")
+        searchComboBox.insertItem(2, "Albums")
+
         searchHBox = QHBoxLayout()
         searchHBox.addStretch(1)
         searchHBox.addWidget(searchBar)
         searchHBox.addWidget(searchButton)
+        searchHBox.addWidget(searchComboBox)
         searchHBox.addStretch(1)
 
         tableGrid = QGridLayout()
@@ -900,6 +906,7 @@ class TrackSearchDialog(QDialog):
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("Search for a Track")
         self.show()
+        searchComboBox.setFixedHeight(searchBar.height()+1) # +1 to align it properly
 
     def tableSetEnabled(self, table, enabled, message="No Results"):
         table.setEnabled(enabled)
