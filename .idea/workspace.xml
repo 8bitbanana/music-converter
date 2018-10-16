@@ -5,9 +5,8 @@
       <changelist_data name="8bitbanana" email="30533393+8bitbanana@users.noreply.github.com" date="1539515646000" />
     </list>
     <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/data/spotify_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/spotify_auth.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/youtube_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/youtube_auth.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apicontrol.py" beforeDir="false" afterPath="$PROJECT_DIR$/apicontrol.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,20 +20,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="951" column="29" selection-start-line="951" selection-start-column="29" selection-end-line="951" selection-end-column="29" />
+            <state relative-caret-position="374">
+              <caret line="954" column="62" lean-forward="true" selection-start-line="954" selection-start-column="62" selection-end-line="954" selection-end-column="62" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="apicontrol.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="apicontrol.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apicontrol.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="257" column="58" selection-start-line="257" selection-start-column="58" selection-end-line="257" selection-end-column="58" />
+            <state relative-caret-position="307">
+              <caret line="193" column="27" selection-start-line="193" selection-start-column="27" selection-end-line="193" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -52,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/search.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="544">
-              <caret line="33" column="9" lean-forward="true" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+              <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -119,11 +118,16 @@
         <option value="$PROJECT_DIR$/spotify.py" />
         <option value="$PROJECT_DIR$/api_creds.json" />
         <option value="$PROJECT_DIR$/search.py" />
-        <option value="$PROJECT_DIR$/apicontrol.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/apicontrol.py" />
       </list>
     </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="953" />
+    <option name="width" value="974" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectView">
     <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
@@ -151,18 +155,16 @@
           <expand>
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="universal-music" type="cbb8eebc:String" user="universal-music" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="universal-music" type="cbb8eebc:String" user="universal-music" />
-              <item name=".idea" type="cbb8eebc:String" user=".idea" />
+              <item name="music-converter" type="cbb8eebc:String" user="music-converter" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -346,23 +348,23 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.13859275" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.1401919" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.2167756" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" weight="0.32897604" />
-      <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
+      <window_info active="true" anchor="right" id="Run" order="5" visible="true" weight="0.35341153" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32897604" />
       <window_info anchor="right" id="Python Console" order="4" weight="0.42643923" />
-      <window_info active="true" anchor="right" id="Run" order="5" visible="true" weight="0.35341153" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.6013072" />
-      <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
       <window_info anchor="right" id="Debug" order="3" weight="0.3326226" />
+      <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
       <window_info anchor="bottom" id="Message" order="3" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -379,53 +381,53 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
       <expression>
-        <expression-string>data['pageInfo']['totalResults'] &gt; 200</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>len(data['items']) &gt; 200</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>len(data['items']) &lt; 200</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>term == &quot;CHVURCHES - My Enemy&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>term = &quot;CHVURCHES - My Enemy&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>trackTitle = &quot;dash&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>trackTitle = &quot;Dash&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>track.title = &quot;Dash&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>track.title == &quot;Clash&quot;</expression-string>
+        <expression-string />
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -753,17 +755,10 @@
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="544">
-          <caret line="33" column="9" lean-forward="true" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+          <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apicontrol.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="257" column="58" selection-start-line="257" selection-start-column="58" selection-end-line="257" selection-end-column="58" />
         </state>
       </provider>
     </entry>
@@ -776,8 +771,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="951" column="29" selection-start-line="951" selection-start-column="29" selection-end-line="951" selection-end-column="29" />
+        <state relative-caret-position="374">
+          <caret line="954" column="62" lean-forward="true" selection-start-line="954" selection-start-column="62" selection-end-line="954" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apicontrol.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="193" column="27" selection-start-line="193" selection-start-column="27" selection-end-line="193" selection-end-column="27" />
         </state>
       </provider>
     </entry>

@@ -187,7 +187,12 @@ def spotify_read_playlists(auth, ids=False):
             playlists[item['name']] = item['id']
     else:
         for item in items:
-            playlists[item['name']] = spotify_read_playlist(auth, item['tracks']['id'])
+            if 'id' in item['tracks']:
+                playlist_id = item['tracks']['id']
+            elif 'href' in item['tracks']:
+                url = item['tracks']['href']
+                playlist_id = url.split("/")[-2]
+            playlists[item['name']] = spotify_read_playlist(auth, playlist_id)
     return playlists
 
 def spotify_read_playlist(auth, playlist_id, album=False): # Album parameter to read an album
