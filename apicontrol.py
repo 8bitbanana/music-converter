@@ -190,14 +190,20 @@ def spotify_read_playlists(auth, ids=False):
             playlists[item['name']] = spotify_read_playlist(auth, item['tracks']['id'])
     return playlists
 
-def spotify_read_playlist(auth, playlist_id):
+def spotify_read_playlist(auth, playlist_id, album=False): # Album parameter to read an album
     tracks = []
     headers = {
         "authorization": "Bearer " + auth.token,
     }
-    items = pagination("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", "get", headers=headers) # whole url is passed as parameter
+    if album:
+        items = pagination("https://api.spotify.com/v1/albums/"+playlist_id+"/tracks", "get", headers=headers)
+    else:
+        items = pagination("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", "get", headers=headers)
     for track in items:
-        track = track['track']
+        if album:
+            track['album'] = {"name":None} # When getting the tracks from an album, the album name itself is not in the track object.
+        else:                              # As the Qt GUI doesn't display albums, they aren't needed, so this line is to prevent errors.
+            track = track['track']         # If albums are needed, the album name will need to be passes, probably into this function in the album parameter
         new_track = Track(
             track['name'],
             track['artists'][0]['name'],

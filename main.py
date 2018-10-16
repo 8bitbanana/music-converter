@@ -851,6 +851,12 @@ class TrackSearchDialog(QDialog):
                 "spotify":"playlist",
                 "youtube":"playlist",
                 "result":"multiple"
+            },
+            "album":{
+                "name":"Albums",
+                "spotify":"album",
+                "youtube":None,
+                "result":"multiple"
             }
         }
         self.currentSearchType = "track"
@@ -1060,12 +1066,15 @@ class TrackSearchDialog(QDialog):
         }
 
     def doSearch(self, service, searchType, **kwargs):
+        if self.searchTypes[searchType][service] == None:
+            return []
         resultType = self.searchTypes[searchType]['result']
         query = self.searchBar.text()
         if query == "": return []
         results = []
         matched_ids = self.matchId(service, query, searchType) # matchId automatically takes searchType into account
         if service == "spotify":
+            a=1
             for matched_id in matched_ids['tracks']:
                 data = apicontrol.spotify_get_item(self.sAuth, matched_id, "track")
                 if data:
@@ -1085,7 +1094,7 @@ class TrackSearchDialog(QDialog):
                     'items': apicontrol.spotify_read_playlist(self.sAuth, data['id'])
                 }
                 results.append(newItem)
-            search_results = search.spotify_search(query, searchType, self.sAuth, amount=10)
+            search_results = search.spotify_search(query, self.searchTypes[searchType][service], self.sAuth, amount=10)
             if search_results == None: search_results = []
             for result in search_results:
                 if resultType == "single":
@@ -1098,11 +1107,20 @@ class TrackSearchDialog(QDialog):
                     track.update_duration("spotify", result['duration_ms'] / 1000)
                     results.append(track)
                 elif resultType == "multiple":
-                    newItem = {
-                        'name': result['name'],
-                        'owner': result['owner']['display_name'],
-                        'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'])
-                    }
+                    if searchType == "playlist":
+                        newItem = {
+                            'name': result['name'],
+                            'owner': result['owner']['display_name'],
+                            'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'])
+                        }
+                    elif searchType == "album":
+                        newItem = {
+                            'name': result['name'],
+                            'owner': result['artists'][0]['name'],
+                            'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'], album=True)
+                        }
+                    else:
+                        raise ValueError("Invalid searchType for spotify doSearch")
                     results.append(newItem)
         elif service == "youtube":
             for matched_id in matched_ids['tracks']:
@@ -1124,7 +1142,7 @@ class TrackSearchDialog(QDialog):
                     'items': apicontrol.youtube_read_playlist(self.yAuth, data['id'])
                 }
                 results.append(newItem)
-            search_results = search.youtube_search(query, searchType, self.yAuth, amount=10)
+            search_results = search.youtube_search(query, self.searchTypes[searchType][service], self.yAuth, amount=10)
             for result in search_results:
                 if resultType == "single":
                     data = apicontrol.youtube_get_item(self.yAuth, result['id']['videoId'], "video")
@@ -1137,12 +1155,15 @@ class TrackSearchDialog(QDialog):
                     track.update_duration("youtube", isodate.parse_duration(data['contentDetails']['duration']).total_seconds())
                     results.append(track)
                 elif resultType == "multiple":
-                    playlist_data = apicontrol.youtube_get_playlist_info(self.yAuth, result['id']['playlistId'])
-                    newItem = {
-                        'name': playlist_data['snippet']['title'],
-                        'owner': playlist_data['snippet']['channelTitle'],
-                        'items': apicontrol.youtube_read_playlist(self.yAuth, playlist_data['id'])
-                    }
+                    if searchType == "playlist":
+                        playlist_data = apicontrol.youtube_get_playlist_info(self.yAuth, result['id']['playlistId'])
+                        newItem = {
+                            'name': playlist_data['snippet']['title'],
+                            'owner': playlist_data['snippet']['channelTitle'],
+                            'items': apicontrol.youtube_read_playlist(self.yAuth, playlist_data['id'])
+                        }
+                    else:
+                        raise ValueError("Invalid searchType for youtube doSearch")
                     results.append(newItem)
         else:
             raise ValueError("Invalid service for search")
