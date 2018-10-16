@@ -297,7 +297,6 @@ class MainWindow(QWidget):
         exportYoutubeButton.clicked.connect(lambda: self.initExportThread("youtube"))
 
         quitAction.triggered.connect(lambda: sys.exit(0))
-        tableEditAction.triggered.connect(lambda: self.setTableEdit(True))
         addCustomTrackAction.triggered.connect(self.openCustomTrackDialog)
         manageAccountsAction.triggered.connect(self.openAccountsDialog)
         wipeLoginsAction.triggered.connect(self.wipeAccounts)
