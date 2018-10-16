@@ -1,5 +1,6 @@
 /.vs*
 /.idea*
+*workspace.xml
 /build*
 /dist*
 .DS_STORE

@@ -1094,6 +1094,14 @@ class TrackSearchDialog(QDialog):
                     'items': apicontrol.spotify_read_playlist(self.sAuth, data['id'])
                 }
                 results.append(newItem)
+            for matched_id in matched_ids['albums']:
+                data = apicontrol.spotify_get_playlist_info(self.sAuth, matched_id, album=True)
+                newItem = {
+                    'name': data['name'],
+                    'owner': data['artists'][0]['name'],
+                    'items': apicontrol.spotify_read_playlist(self.sAuth, data['id'], album=True)
+                }
+                results.append(newItem)
             search_results = search.spotify_search(query, self.searchTypes[searchType][service], self.sAuth, amount=10)
             if search_results == None: search_results = []
             for result in search_results:

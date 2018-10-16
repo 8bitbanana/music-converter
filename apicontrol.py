@@ -250,11 +250,14 @@ def spotify_update_playlist(auth, playlist_object, name, desc, public=True):
     playlist_id = playlist_object['id']
     r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id, "put", headers=headers, data=data)
 
-def spotify_get_playlist_info(auth, playlist_id):
+def spotify_get_playlist_info(auth, playlist_id, album=False):
     headers = {
         "authorization": "Bearer " + auth.token,
     }
-    r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id, "get", headers=headers)
+    if album:
+        r = makeRequest("https://api.spotify.com/v1/albums/" + playlist_id, "get", headers=headers)
+    else:
+        r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id, "get", headers=headers)
     data = json.loads(r.content)
     return data
 
