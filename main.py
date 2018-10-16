@@ -1054,9 +1054,9 @@ class TrackSearchDialog(QDialog):
         if current_substring:
             substrings.append(current_substring)
         return {
-            "tracks": [x for x in substrings if len(x) == requirements[service]['length']['track']],
-            "playlists": [x for x in substrings if len(x) == requirements[service]['length']['playlist']],
-            "albums": [x for x in substrings if len(x) == requirements[service]['length']['album']]
+            "tracks": [x for x in substrings if len(x) == requirements[service]['length']['track'] and searchType == "track"],
+            "playlists": [x for x in substrings if len(x) == requirements[service]['length']['playlist'] and searchType == "playlist"],
+            "albums": [x for x in substrings if len(x) == requirements[service]['length']['album'] and searchType == "album"]
         }
 
     def doSearch(self, service, searchType, **kwargs):
@@ -1064,10 +1064,7 @@ class TrackSearchDialog(QDialog):
         query = self.searchBar.text()
         if query == "": return []
         results = []
-        if resultType == "single":
-            matched_ids = self.matchId(service, query, searchType)
-        else:
-            matched_ids = {'tracks':[]} # todo - match playlist/album ids
+        matched_ids = self.matchId(service, query, searchType) # matchId automatically takes searchType into account
         if service == "spotify":
             for matched_id in matched_ids['tracks']:
                 data = apicontrol.spotify_get_item(self.sAuth, matched_id, "track")
@@ -1080,7 +1077,14 @@ class TrackSearchDialog(QDialog):
                     track.update_service("spotify", matched_id)
                     track.update_duration("spotify", int(data['duration_ms']) / 1000)
                     results.append(track)
-
+            for matched_id in matched_ids['playlists']:
+                data = apicontrol.spotify_get_playlist_info(self.sAuth, matched_id)
+                newItem = {
+                    'name': data['name'],
+                    'owner': data['owner']['display_name'],
+                    'items': apicontrol.spotify_read_playlist(self.sAuth, data['id'])
+                }
+                results.append(newItem)
             search_results = search.spotify_search(query, searchType, self.sAuth, amount=10)
             if search_results == None: search_results = []
             for result in search_results:
@@ -1112,7 +1116,14 @@ class TrackSearchDialog(QDialog):
                     track.update_service("youtube", data['id'])
                     track.update_duration("youtube", isodate.parse_duration(data['contentDetails']['duration']).total_seconds())
                     results.append(track)
-
+            for matched_id in matched_ids['playlists']:
+                data = apicontrol.youtube_get_playlist_info(self.yAuth, matched_id)
+                newItem = {
+                    'name': data['snippet']['title'],
+                    'owner': data['snippet']['channelTitle'],
+                    'items': apicontrol.youtube_read_playlist(self.yAuth, data['id'])
+                }
+                results.append(newItem)
             search_results = search.youtube_search(query, searchType, self.yAuth, amount=10)
             for result in search_results:
                 if resultType == "single":
