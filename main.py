@@ -823,8 +823,11 @@ class MainWindow(QWidget):
     def openTrackSearchDialog(self):
         dialog = TrackSearchDialog(self.sAuth, self.yAuth, self.threadpool)
         if dialog.exec_():
-            track = dialog.track
-            self.updateTable(self.table, [track], append=True)
+            result = dialog.result
+            if type(result) == apicontrol.Track:
+                self.updateTable(self.table, [result], append=True)
+            elif type(result) == list:
+                self.updateTable(self.table, result, append=True)
 
 class TrackSearchDialog(QDialog):
     def __init__(self, sAuth, yAuth, threadpool):
@@ -836,6 +839,21 @@ class TrackSearchDialog(QDialog):
         self.initUI()
 
     def initUI(self):
+        self.searchTypes = {
+            "track":{
+                "name":"Tracks",
+                "spotify":"track",
+                "youtube":"video",
+                "result":"single"
+            },
+            "playlist":{
+                "name":"Playlists",
+                "spotify":"playlist",
+                "youtube":"playlist",
+                "result":"multiple"
+            }
+        }
+        self.currentSearchType = "track"
         searchBar = QLineEdit()
         searchBar.setMinimumWidth(SEARCH_TABLE_FIXED_WIDTH)
         searchButton = QPushButton("Search")
@@ -869,9 +887,8 @@ class TrackSearchDialog(QDialog):
         if not self.yAuth: self.tableSetEnabled(youtubeTable, False, "Logged Out")
 
         searchComboBox = QComboBox()
-        searchComboBox.insertItem(0, "Tracks")
-        searchComboBox.insertItem(1, "Playlists")
-        searchComboBox.insertItem(2, "Albums")
+        for i, t in enumerate(self.searchTypes):
+            searchComboBox.insertItem(i, self.searchTypes[t]['name'])
 
         searchHBox = QHBoxLayout()
         searchHBox.addStretch(1)
@@ -896,6 +913,8 @@ class TrackSearchDialog(QDialog):
         mainVBox.addLayout(buttonHBox)
 
         searchButton.clicked.connect(self.searchAll)
+        cancelButton.clicked.connect(self.reject)
+        searchComboBox.currentTextChanged.connect(self.updateSearchType)
         #searchBar.returnPressed.connect(self.searchAll)
 
         self.searchBar = searchBar
@@ -907,6 +926,10 @@ class TrackSearchDialog(QDialog):
         self.setWindowTitle("Search for a Track")
         self.show()
         searchComboBox.setFixedHeight(searchBar.height()+1) # +1 to align it properly
+
+    def updateSearchType(self, text):
+        for i in self.searchTypes:
+            if self.searchTypes[i]['name'] == text: self.currentSearchType = i
 
     def tableSetEnabled(self, table, enabled, message="No Results"):
         table.setEnabled(enabled)
@@ -922,17 +945,18 @@ class TrackSearchDialog(QDialog):
             table.setItem(0, 0, item)
 
     def searchAll(self):
+        searchType = self.currentSearchType
         print("searchAll")
         if self.sAuth:
             self.tableSetEnabled(self.spotifyTable, False, "Searching...")
-            worker = Worker(self.doSearch, "spotify")
-            worker.signals.result.connect(lambda results: self.updateTable("spotify", results))
+            worker = Worker(self.doSearch, "spotify", searchType)
+            worker.signals.result.connect(lambda results: self.updateTable("spotify", results, searchType))
             worker.signals.error.connect(lambda error: self.tableSetEnabled(self.spotifyTable, False, message="Error")) # todo - more descriptive
             self.threadpool.start(worker)
         if self.yAuth:
             self.tableSetEnabled(self.youtubeTable, False, "Searching...")
-            worker = Worker(self.doSearch, "youtube")
-            worker.signals.result.connect(lambda results: self.updateTable("youtube", results))
+            worker = Worker(self.doSearch, "youtube", searchType)
+            worker.signals.result.connect(lambda results: self.updateTable("youtube", results, searchType))
             worker.signals.error.connect(lambda error: self.tableSetEnabled(self.youtubeTable, False, message="Error"))
             self.threadpool.start(worker)
 
@@ -945,7 +969,13 @@ class TrackSearchDialog(QDialog):
         else:
             return "%d:%02d" % (m, s)
 
-    def updateTable(self, service, results):
+    # Takes a track object, or
+    #{
+    #    'name':...,
+    #    'owner':...,
+    #    'items':[...]
+    #}
+    def updateTable(self, service, results, searchType):
         if service == "spotify":
             table = self.spotifyTable
             #results = self.spotifyResults
@@ -954,26 +984,44 @@ class TrackSearchDialog(QDialog):
             #results = self.youtubeResults
         else:
             raise ValueError("Invalid service for updateTable")
+        resultType = self.searchTypes[searchType]['result']
+        if resultType == "single":
+            self.tableHeaders = ["Title", "Artist", "Duration", ""]
+        elif resultType == "multiple":
+            self.tableHeaders = ['Name', "Owner", "Length", ""]
         if results:
             self.tableSetEnabled(table, True)
             table.setRowCount(len(results))
-            for i, track in enumerate(results):
-                titleItem = QTableWidgetItem(track.title)
-                artistItem = QTableWidgetItem(track.artist)
-                durationItem = QTableWidgetItem(self.formatTime(track.get_duration()))
-                titleItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
-                artistItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
-                durationItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+            for i, result in enumerate(results):
+                if resultType == "single":
+                    titleItem = QTableWidgetItem(result.title)
+                    artistItem = QTableWidgetItem(result.artist)
+                    durationItem = QTableWidgetItem(self.formatTime(result.get_duration()))
+                    titleItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+                    artistItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+                    durationItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+                    table.setItem(i, 0, titleItem)
+                    table.setItem(i, 1, artistItem)
+                    table.setItem(i, 2, durationItem)
+                elif resultType == "multiple":
+                    nameItem = QTableWidgetItem(result['name'])
+                    ownerItem = QTableWidgetItem(result['owner'])
+                    lengthItem = QTableWidgetItem(str(len(result['items'])))
+                    nameItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+                    lengthItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
+                    table.setItem(i, 0, nameItem)
+                    table.setItem(i, 1, ownerItem)
+                    table.setItem(i, 2, lengthItem)
                 addButton = QPushButton("Add")
-                table.setItem(i, 0, titleItem)
-                table.setItem(i, 1, artistItem)
-                table.setItem(i, 2, durationItem)
                 table.setIndexWidget(table.model().index(i, 3), addButton)
-                addButton.clicked.connect(lambda clicked, track=track: self.closeDialog(track))
+                if resultType == "single":
+                    addButton.clicked.connect(lambda clicked, result=result: self.closeDialog(result))
+                if resultType == "multiple":
+                    addButton.clicked.connect(lambda clicked, result=result['items']: self.closeDialog(result))
         else:
             self.tableSetEnabled(table, False, "No Results")
 
-    def matchId(self, service, text):
+    def matchId(self, service, text, searchType):
         requirements = {
             "spotify": {
                 "length":{
@@ -1011,13 +1059,16 @@ class TrackSearchDialog(QDialog):
             "albums": [x for x in substrings if len(x) == requirements[service]['length']['album']]
         }
 
-    def doSearch(self, service, **kwargs):
+    def doSearch(self, service, searchType, **kwargs):
+        resultType = self.searchTypes[searchType]['result']
         query = self.searchBar.text()
         if query == "": return []
         results = []
-        matched_ids = self.matchId(service, query)
+        if resultType == "single":
+            matched_ids = self.matchId(service, query, searchType)
+        else:
+            matched_ids = {'tracks':[]} # todo - match playlist/album ids
         if service == "spotify":
-
             for matched_id in matched_ids['tracks']:
                 data = apicontrol.spotify_get_item(self.sAuth, matched_id, "track")
                 if data:
@@ -1030,20 +1081,26 @@ class TrackSearchDialog(QDialog):
                     track.update_duration("spotify", int(data['duration_ms']) / 1000)
                     results.append(track)
 
-            search_results = search.spotify_search(query, "track", self.sAuth, amount=10)
+            search_results = search.spotify_search(query, searchType, self.sAuth, amount=10)
             if search_results == None: search_results = []
             for result in search_results:
-                track = apicontrol.Track(
-                    result['name'],
-                    result['artists'][0]['name'],
-                    result['album']['name']
-                ) # track searched by id cannot be local
-                track.update_service("spotify", result['id'])
-                track.update_duration("spotify", result['duration_ms'] / 1000)
-                results.append(track)
-
+                if resultType == "single":
+                    track = apicontrol.Track(
+                        result['name'],
+                        result['artists'][0]['name'],
+                        result['album']['name']
+                    ) # track searched by id cannot be local
+                    track.update_service("spotify", result['id'])
+                    track.update_duration("spotify", result['duration_ms'] / 1000)
+                    results.append(track)
+                elif resultType == "multiple":
+                    newItem = {
+                        'name': result['name'],
+                        'owner': result['owner']['display_name'],
+                        'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'])
+                    }
+                    results.append(newItem)
         elif service == "youtube":
-
             for matched_id in matched_ids['tracks']:
                 data = apicontrol.youtube_get_item(self.yAuth, matched_id, "video")
                 if data:
@@ -1056,23 +1113,32 @@ class TrackSearchDialog(QDialog):
                     track.update_duration("youtube", isodate.parse_duration(data['contentDetails']['duration']).total_seconds())
                     results.append(track)
 
-            search_results = search.youtube_search(query, "video", self.yAuth, amount=10)
+            search_results = search.youtube_search(query, searchType, self.yAuth, amount=10)
             for result in search_results:
-                data = apicontrol.youtube_get_item(self.yAuth, result['id']['videoId'], "video")
-                track = apicontrol.Track(
-                    data['snippet']['title'],
-                    data['snippet']['channelTitle'],
-                    None
-                )
-                track.update_service("youtube", data['id'])
-                track.update_duration("youtube", isodate.parse_duration(data['contentDetails']['duration']).total_seconds())
-                results.append(track)
+                if resultType == "single":
+                    data = apicontrol.youtube_get_item(self.yAuth, result['id']['videoId'], "video")
+                    track = apicontrol.Track(
+                        data['snippet']['title'],
+                        data['snippet']['channelTitle'],
+                        None
+                    )
+                    track.update_service("youtube", data['id'])
+                    track.update_duration("youtube", isodate.parse_duration(data['contentDetails']['duration']).total_seconds())
+                    results.append(track)
+                elif resultType == "multiple":
+                    playlist_data = apicontrol.youtube_get_playlist_info(self.yAuth, result['id']['playlistId'])
+                    newItem = {
+                        'name': playlist_data['snippet']['title'],
+                        'owner': playlist_data['snippet']['channelTitle'],
+                        'items': apicontrol.youtube_read_playlist(self.yAuth, playlist_data['id'])
+                    }
+                    results.append(newItem)
         else:
             raise ValueError("Invalid service for search")
         return results
 
-    def closeDialog(self, track):
-        self.track = track
+    def closeDialog(self, result):
+        self.result = result
         self.accept()
 
 class ReorderDialog(QDialog):

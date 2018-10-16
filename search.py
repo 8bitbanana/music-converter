@@ -23,7 +23,7 @@ def tuple_to_str(terms):
 
 # Runs a search through spotify's api
 def spotify_search(keywords, content_type, auth, amount=1):
-    valid_types = ["artist","album","track"]
+    valid_types = ["artist","album","track","playlist"]
     if not content_type in valid_types: raise ValueError("Invalid Type - "+content_type)
     headers = {"Authorization":"Bearer "+auth.token}
     keywords = quote(keywords)

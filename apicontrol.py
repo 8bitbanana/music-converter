@@ -116,12 +116,17 @@ def makeRequest(url, method="get", expectedCode=200, *args, **kwargs):
 
 def pagination(url, *args, **kwargs):
     items = []
+    pageToken = None
     for page in range(PAGINATION_PAGES):
-        r = makeRequest(url, *args, **kwargs)
+        if pageToken: params = {"pageToken":pageToken}
+        else: params = {}
+        r = makeRequest(url, params=params, *args, **kwargs)
         data = json.loads(r.content)
         items += data['items']
         if 'next' in data.keys() and data['next']: # If 'next' exists and is non-None
             url = data['next']
+        elif 'nextPageToken' in data.keys() and data['nextPageToken']:
+            pageToken = data['nextPageToken']
         else:
             break
     return items
@@ -155,7 +160,6 @@ def spotify_get_item(auth, track_id, itemType="track"):
     data = json.loads(r.content)
     return data
 
-
 def youtube_get_item(auth, video_id, itemType="video"):
     types_dict = {
         "video":"videos",
@@ -183,15 +187,15 @@ def spotify_read_playlists(auth, ids=False):
             playlists[item['name']] = item['id']
     else:
         for item in items:
-            playlists[item['name']] = spotify_read_playlist(auth, item['tracks']['href']) # returns whole api url, not just the playlist id
+            playlists[item['name']] = spotify_read_playlist(auth, item['tracks']['id'])
     return playlists
 
-def spotify_read_playlist(auth, url):
+def spotify_read_playlist(auth, playlist_id):
     tracks = []
     headers = {
         "authorization": "Bearer " + auth.token,
     }
-    items = pagination(url, "get", headers=headers) # whole url is passed as parameter
+    items = pagination("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", "get", headers=headers) # whole url is passed as parameter
     for track in items:
         track = track['track']
         new_track = Track(
@@ -333,24 +337,33 @@ def youtube_read_playlists(auth, ids=False):
     return playlists
 
 def youtube_read_playlist(auth, playlist_id):
+    ids_request_limit = 40
     playlist = []
     headers = {
         "authorization": "Bearer " + auth.token
     }
     items = pagination("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&playlistId=" + playlist_id, "get", headers=headers)
+    ids_str_list = []
     ids_str = ""
+    index = 0
     for item in items:
         ids_str += item['contentDetails']['videoId'] + "%2C"
-    r = makeRequest("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + ids_str, "get", headers=headers)
-    videoData = json.loads(r.content)
-    for item in videoData['items']:
-        track = Track(
-            item['snippet']['title'],
-            item['snippet']['channelTitle'],
-            None
-        )
-        track.update_service("youtube",item['id'])
-        playlist.append(track)
+        index += 1
+        if index >= ids_request_limit:
+            ids_str_list.append(ids_str)
+            ids_str = ""
+    ids_str_list.append(ids_str)
+    for ids_str in ids_str_list:
+        r = makeRequest("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + ids_str, "get", headers=headers)
+        videoData = json.loads(r.content)
+        for item in videoData['items']:
+            track = Track(
+                item['snippet']['title'],
+                item['snippet']['channelTitle'],
+                None
+            )
+            track.update_service("youtube",item['id'])
+            playlist.append(track)
     return playlist
 
 if __name__ == "__main__":
