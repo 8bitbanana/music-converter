@@ -935,12 +935,22 @@ class TrackSearchDialog(QDialog):
 
     def updateSearchType(self, text):
         for i in self.searchTypes:
-            if self.searchTypes[i]['name'] == text: self.currentSearchType = i
+            if self.searchTypes[i]['name'] == text:
+                self.currentSearchType = i
+                if self.searchTypes[i]['spotify'] == None:
+                    self.tableSetEnabled(self.spotifyTable, False, message="n/a")
+                else:
+                    self.tableSetEnabled(self.spotifyTable, True)
+                if self.searchTypes[i]['youtube'] == None:
+                    self.tableSetEnabled(self.youtubeTable, False, message="n/a")
+                else:
+                    self.tableSetEnabled(self.youtubeTable, True)
 
     def tableSetEnabled(self, table, enabled, message="No Results"):
-        table.setEnabled(enabled)
-        table.setShowGrid(enabled)
         if enabled:
+            if not table.isEnabled():
+                table.clear()
+                table.setRowCount(0)
             table.horizontalHeader().show()
             table.setHorizontalHeaderLabels(self.tableHeaders)
         else:
@@ -949,6 +959,8 @@ class TrackSearchDialog(QDialog):
             table.clear()
             item = QTableWidgetItem(message)
             table.setItem(0, 0, item)
+        table.setEnabled(enabled)
+        table.setShowGrid(enabled)
 
     def searchAll(self):
         searchType = self.currentSearchType

@@ -4,10 +4,7 @@
     <list id="7b7c69a5-38a2-40dc-871d-06a31c281528" name="removed all svg arrows" comment="removed all svg arrows&#10;&#10;(cherry picked from commit 9cb9406)">
       <changelist_data name="8bitbanana" email="30533393+8bitbanana@users.noreply.github.com" date="1539515646000" />
     </list>
-    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="Added album searching">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apicontrol.py" beforeDir="false" afterPath="$PROJECT_DIR$/apicontrol.py" afterDir="false" />
+    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/data/spotify_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/spotify_auth.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/youtube_auth.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/youtube_auth.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -24,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="1097" selection-start-line="1097" selection-end-line="1097" />
+            <state relative-caret-position="531">
+              <caret line="951" column="29" selection-start-line="951" selection-start-column="29" selection-end-line="951" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -42,7 +39,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="34">
@@ -122,9 +119,9 @@
         <option value="$PROJECT_DIR$/spotify.py" />
         <option value="$PROJECT_DIR$/api_creds.json" />
         <option value="$PROJECT_DIR$/search.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/apicontrol.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
@@ -312,12 +309,12 @@
       <option name="project" value="LOCAL" />
       <updated>1539683709685</updated>
     </task>
-    <task id="LOCAL-00002" summary="Added GUI elements for track/playlist searching picker">
-      <created>1539607992936</created>
+    <task id="LOCAL-00002" summary="Added album searching by ID">
+      <created>1539684092287</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1539607992936</updated>
+      <updated>1539684092287</updated>
     </task>
     <task id="LOCAL-00003" summary="Added support for playlist searching. Searching my playlist ID not implemented yet.&#10;Also fixed a bug where a YouTube playlist with more than 50 videos will return a 400 error.">
       <created>1539680689164</created>
@@ -333,7 +330,7 @@
       <option name="project" value="LOCAL" />
       <updated>1539682254513</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -349,13 +346,13 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.13859275" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.13859275" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.2167756" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" weight="0.32897604" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32897604" />
       <window_info anchor="right" id="Python Console" order="4" weight="0.42643923" />
-      <window_info anchor="right" id="Run" order="5" visible="true" weight="0.35341153" />
+      <window_info active="true" anchor="right" id="Run" order="5" visible="true" weight="0.35341153" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.6013072" />
       <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
@@ -377,7 +374,8 @@
     <MESSAGE value="Added support for playlist searching. Searching my playlist ID not implemented yet.&#10;Also fixed a bug where a YouTube playlist with more than 50 videos will return a 400 error." />
     <MESSAGE value="Added playlist ID matching" />
     <MESSAGE value="Added album searching" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added album searching" />
+    <MESSAGE value="Added album searching by ID" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added album searching by ID" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -762,13 +760,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="1097" selection-start-line="1097" selection-end-line="1097" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apicontrol.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
@@ -780,6 +771,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="951" column="29" selection-start-line="951" selection-start-column="29" selection-end-line="951" selection-end-column="29" />
         </state>
       </provider>
     </entry>
