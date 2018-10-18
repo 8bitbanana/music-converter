@@ -14,12 +14,12 @@ class Track:
         self.services = {
             "spotify":{
                 "id":None,
-                "link":"open.spotify.com/track/{}",
+                "link":"https://open.spotify.com/track/{}",
                 "duration":None
             },
             "youtube": {
                 "id": None,
-                "link": "youtube.com/watch?v={}",
+                "link": "https://www.youtube.com/watch?v={}",
                 "duration": None
             },
             "local": {
@@ -62,6 +62,10 @@ class Track:
                 return True
         else:
             raise ValueError("Service must be one of "+str(list(self.services.keys()))+" not " + service)
+
+    def get_link(self, service):
+        if service in self.services.keys():
+            return self.services[service]['link'].format(self.services[service]['id'])
 
     def get_duration(self):
         total = 0

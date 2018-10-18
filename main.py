@@ -1,4 +1,4 @@
-import sys, traceback, copy, json, os, random, string, isodate
+import sys, traceback, copy, json, os, random, string, isodate, webbrowser
 import apicontrol, search, spotify, youtube
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -779,13 +779,18 @@ class MainWindow(QWidget):
         self.updateRequirementButtons()
 
     def showTableContextMenu(self, pos):
-        print(pos)
         clipboard = QGuiApplication.clipboard()
         item = self.table.itemAt(pos)
         if not item: return
         contextMenu = QMenu()
         copyAction = contextMenu.addAction("Copy")
         copyAction.triggered.connect(lambda: clipboard.setText(item.text()))
+        if item.column() == 2:
+            openAction = contextMenu.addAction("Open in browser")
+            openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("spotify")))
+        if item.column() == 3:
+            openAction = contextMenu.addAction("Open in browser")
+            openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("youtube")))
         contextMenu.exec(QCursor.pos())
 
     # todo - deprecated
