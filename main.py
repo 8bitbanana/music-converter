@@ -810,7 +810,7 @@ class MainWindow(QWidget):
         contextMenu.exec(QCursor.pos())
 
     def detatchLink(self, item):
-        if item.column() == 2:   # todo - double check it is removing the duration properly
+        if item.column() == 2:
             service = "spotify"
         elif item.column() == 3:
             service = "youtube"
