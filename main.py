@@ -783,8 +783,9 @@ class MainWindow(QWidget):
         item = self.table.itemAt(pos)
         if not item: return
         contextMenu = QMenu()
-        copyAction = contextMenu.addAction("Copy")
-        copyAction.triggered.connect(lambda: clipboard.setText(item.text()))
+        if not (item.column() == 4 and item.text() == "None"): # To stop copy from appearing for local "None" links
+            copyAction = contextMenu.addAction("Copy")
+            copyAction.triggered.connect(lambda: clipboard.setText(item.text()))
         if item.column() in (0, 1):
             editAction = contextMenu.addAction("Edit")
             editAction.triggered.connect(lambda clicked, item=item: self.editCell(item))
@@ -807,7 +808,7 @@ class MainWindow(QWidget):
         contextMenu.exec(QCursor.pos())
 
     def detatchLink(self, item): # todo - undo and redo
-        if item.column() == 2:
+        if item.column() == 2:   # todo - double check it is removing the duration properly
             service = "spotify"
         elif item.column() == 3:
             service = "youtube"
