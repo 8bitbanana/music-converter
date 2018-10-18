@@ -738,6 +738,7 @@ class MainWindow(QWidget):
             self.updateRequirementButtons()
 
     def updateTable(self, table, tracks, append=False):
+        scrollPos = table.verticalScrollBar().value()
         oldTracks = copy.deepcopy(self.tracks)
         self.undoStack.append(lambda self=self, table=table, oldTracks=oldTracks: self.updateTable(table, oldTracks, append=False))
         self.lastAction = lambda self=self, table=table, tracks=copy.deepcopy(tracks), append=append: self.updateTable(table, tracks, append)
@@ -776,6 +777,7 @@ class MainWindow(QWidget):
                     item = QTableWidgetItem(cell)
                     item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     table.setItem(x+offset, y, item)
+        table.verticalScrollBar().setValue(scrollPos)
         self.updateRequirementButtons()
 
     def showTableContextMenu(self, pos):
