@@ -115,7 +115,7 @@ class MainWindow(QWidget):
         if head and not os.path.isdir(head): os.makedirs(head)
         if not os.path.isfile(tail):
             with open(playlist_file, "w") as f:
-                f.write("[]")
+                f.write("{}")
 
     def initUI(self):
         # Defining Widgets
@@ -203,6 +203,8 @@ class MainWindow(QWidget):
             table.setColumnWidth(col, TABLE_COLUMN_WIDTH)
         table.setMinimumWidth(TABLE_COLUMN_WIDTH * 5 + 50)
         table.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        table.customContextMenuRequested.connect(self.showTableContextMenu)
+        table.setContextMenuPolicy(Qt.CustomContextMenu)
 
         # Defining Menu
         menuBar = QMenuBar(self)
@@ -775,6 +777,16 @@ class MainWindow(QWidget):
                     item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     table.setItem(x+offset, y, item)
         self.updateRequirementButtons()
+
+    def showTableContextMenu(self, pos):
+        print(pos)
+        clipboard = QGuiApplication.clipboard()
+        item = self.table.itemAt(pos)
+        if not item: return
+        contextMenu = QMenu()
+        copyAction = contextMenu.addAction("Copy")
+        copyAction.triggered.connect(lambda: clipboard.setText(item.text()))
+        contextMenu.exec(QCursor.pos())
 
     # todo - deprecated
     def updateRow(self, table, track, row):
