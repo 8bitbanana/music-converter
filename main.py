@@ -793,7 +793,7 @@ class MainWindow(QWidget):
             openAction = contextMenu.addAction("Open in browser")
             openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("spotify")))
             if self.tracks[item.row()].services["spotify"]['id']:
-                detatchAction = contextMenu.addAction("Detach Link")
+                detatchAction = contextMenu.addAction("Detach link")
                 detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         if item.column() == 3:
             openAction = contextMenu.addAction("Open in browser")
@@ -807,18 +807,21 @@ class MainWindow(QWidget):
                 detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         contextMenu.exec(QCursor.pos())
 
-    def detatchLink(self, item): # todo - undo and redo
+    def detatchLink(self, item):
         if item.column() == 2:   # todo - double check it is removing the duration properly
             service = "spotify"
         elif item.column() == 3:
             service = "youtube"
         elif item.column() == 4:
             service = "local"
-        self.tracks[item.row()].update_service(service, None)
-        self.tracks[item.row()].update_duration(service, None, force=True)
-        self.updateTable(self.table, self.tracks, False)
+        else:
+            raise ValueError("detatchLink item service invalid")
+        tracks = copy.deepcopy(self.tracks)
+        tracks[item.row()].update_service(service, None)
+        tracks[item.row()].update_duration(service, None, force=True)
+        self.updateTable(self.table, tracks, False)
 
-    def editCell(self, item): # todo - undo and redo
+    def editCell(self, item):
         dialog = QInputDialog()
         if item.column() == 0:
             valueType = "title"
@@ -828,11 +831,14 @@ class MainWindow(QWidget):
             valueType = "[error]"
         newText, ok = dialog.getText(self, "Edit Value", "Enter a value for the track "+valueType, text=item.text())
         if ok and len(newText) > 0:
+            self.undoStack.append(
+                lambda tracks=copy.deepcopy(self.tracks): self.updateTable(self.table, tracks, append=False))
             item.setText(newText)
             if item.column() == 0:
                 self.tracks[item.row()].title = newText
             elif item.column() == 1:
                 self.tracks[item.row()].artist = newText
+            self.lastAction = lambda tracks=copy.deepcopy(self.tracks): self.updateTable(self.table, tracks, append=False)
 
     # todo - deprecated
     def updateRow(self, table, track, row):
