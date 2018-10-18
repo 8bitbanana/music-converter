@@ -113,7 +113,7 @@ class MainWindow(QWidget):
     def initDataFiles(self):
         head, tail = os.path.split(playlist_file)
         if head and not os.path.isdir(head): os.makedirs(head)
-        if not os.path.isfile(tail):
+        if not os.path.isfile(playlist_file):
             with open(playlist_file, "w") as f:
                 f.write("{}")
 
@@ -785,6 +785,9 @@ class MainWindow(QWidget):
         contextMenu = QMenu()
         copyAction = contextMenu.addAction("Copy")
         copyAction.triggered.connect(lambda: clipboard.setText(item.text()))
+        if item.column() in (0, 1):
+            editAction = contextMenu.addAction("Edit")
+            editAction.triggered.connect(lambda clicked, item=item: self.editCell(item))
         if item.column() == 2:
             openAction = contextMenu.addAction("Open in browser")
             openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("spotify")))
@@ -792,6 +795,22 @@ class MainWindow(QWidget):
             openAction = contextMenu.addAction("Open in browser")
             openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("youtube")))
         contextMenu.exec(QCursor.pos())
+
+    def editCell(self, item): # todo - undo and redo
+        dialog = QInputDialog()
+        if item.column() == 0:
+            valueType = "title"
+        elif item.column() == 1:
+            valueType = "artist"
+        else:
+            valueType = "[error]"
+        newText, ok = dialog.getText(self, "Edit Value", "Enter a value for the track "+valueType, text=item.text())
+        if ok and len(newText) > 0:
+            item.setText(newText)
+            if item.column() == 0:
+                self.tracks[item.row()].title = newText
+            elif item.column() == 1:
+                self.tracks[item.row()].artist = newText
 
     # todo - deprecated
     def updateRow(self, table, track, row):
