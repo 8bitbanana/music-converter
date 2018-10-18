@@ -791,10 +791,31 @@ class MainWindow(QWidget):
         if item.column() == 2:
             openAction = contextMenu.addAction("Open in browser")
             openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("spotify")))
+            if self.tracks[item.row()].services["spotify"]['id']:
+                detatchAction = contextMenu.addAction("Detach Link")
+                detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         if item.column() == 3:
             openAction = contextMenu.addAction("Open in browser")
             openAction.triggered.connect(lambda: webbrowser.open(self.tracks[item.row()].get_link("youtube")))
+            if self.tracks[item.row()].services["youtube"]['id']:
+                detatchAction = contextMenu.addAction("Detach Link")
+                detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
+        if item.column() == 4:
+            if self.tracks[item.row()].services["local"]['id']:
+                detatchAction = contextMenu.addAction("Detach Link")
+                detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         contextMenu.exec(QCursor.pos())
+
+    def detatchLink(self, item): # todo - undo and redo
+        if item.column() == 2:
+            service = "spotify"
+        elif item.column() == 3:
+            service = "youtube"
+        elif item.column() == 4:
+            service = "local"
+        self.tracks[item.row()].update_service(service, None)
+        self.tracks[item.row()].update_duration(service, None, force=True)
+        self.updateTable(self.table, self.tracks, False)
 
     def editCell(self, item): # todo - undo and redo
         dialog = QInputDialog()

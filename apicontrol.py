@@ -45,6 +45,9 @@ class Track:
 
     def update_duration(self, service, duration, force=False):
         if service in self.services.keys():
+            if duration == None:
+                if force: self.services[service]['duration'] = None
+                return False
             # Calculate average of all current durations
             total = 0
             amount = 0
