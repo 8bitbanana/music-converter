@@ -220,7 +220,7 @@ class MainWindow(QWidget):
         tableShuffleAction = editMenu.addAction("&Shuffle Tracks")
 
         addMenu = menuBar.addMenu("&Add")
-        addSearchTrackAction = addMenu.addAction("&Search for a Track")
+        addSearchTrackAction = addMenu.addAction("&Search for an Item")
         addCustomTrackAction = addMenu.addAction("Add &Custom Track")
 
         accountsMenu = menuBar.addMenu("A&ccounts")
@@ -830,7 +830,7 @@ class MainWindow(QWidget):
         elif item.column() == 1:
             valueType = "artist"
         else:
-            valueType = "[error]"
+            raise ValueError("Invalid item colum for editCell")
         newText, ok = dialog.getText(self, "Edit Value", "Enter a value for the track "+valueType, text=item.text())
         if ok and len(newText) > 0:
             self.undoStack.append(
@@ -841,14 +841,6 @@ class MainWindow(QWidget):
             elif item.column() == 1:
                 self.tracks[item.row()].artist = newText
             self.lastAction = lambda tracks=copy.deepcopy(self.tracks): self.updateTable(self.table, tracks, append=False)
-
-    # todo - deprecated
-    def updateRow(self, table, track, row):
-        for col, cell in enumerate(track):
-            item = QTableWidgetItem(cell)
-            item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable | Qt.ItemIsSelectable)
-            table.setItem(row, col, item)
-        self.updateRequirementButtons()
 
     def openCustomTrackDialog(self):
         dialog = CustomTrackDialog()
@@ -985,6 +977,7 @@ class TrackSearchDialog(QDialog):
         mainVBox.addLayout(buttonHBox)
 
         searchButton.clicked.connect(self.searchAll)
+        doneButton.clicked.connect(self.reject)
         cancelButton.clicked.connect(self.reject)
         searchComboBox.currentTextChanged.connect(self.updateSearchType)
         #searchBar.returnPressed.connect(self.searchAll)
@@ -995,7 +988,7 @@ class TrackSearchDialog(QDialog):
 
         self.setLayout(mainVBox)
         self.setWindowModality(Qt.ApplicationModal)
-        self.setWindowTitle("Search for a Track")
+        self.setWindowTitle("Search for an Item")
         self.show()
         searchComboBox.setFixedHeight(searchBar.height()+1) # +1 to align it properly
 
