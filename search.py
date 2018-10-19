@@ -1,6 +1,7 @@
 import itertools, apicontrol, json, traceback, isodate
 from urllib.parse import quote
 
+# Creates a list of all possible combinations of string of words
 # https://stackoverflow.com/questions/464864/how-to-get-all-possible-combinations-of-a-list-s-elements
 # I edited this function to remove the empty tuple and the full tuple
 def powerset(iterable):
@@ -9,6 +10,7 @@ def powerset(iterable):
     pow = (x for x in pow if x != () and x != s)
     return pow
 
+# Converts a tuple of strings to a single string, seperated by spaces
 def tuple_to_str(terms):
     str_terms = []
     for x in terms:

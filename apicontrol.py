@@ -6,6 +6,7 @@ RETRY_ATTEMPTS = 5   # How many times to retry after an error 5XX before giving 
 DURATION_WARN = 0.2  # Decimal difference between two services duration differences to raise an error
 PAGINATION_PAGES = 5 # How many pages to follow with a paging JSON object
 
+# Standardised track object to use throughout the program. Album optional
 class Track:
     def __init__(self, title, artist, album=None):
         self.title = title
@@ -37,12 +38,16 @@ class Track:
             return self.title == other.title and self.artist == other.artist and self.album == other.album and self.services == other.services
         return False
 
+    # Updates the specified service with the specified id
     def update_service(self, service, link):
         if service in self.services.keys():
             self.services[service]['id'] = link
         else:
             raise ValueError("Service must be one of "+str(list(self.services.keys()))+" not " + service)
 
+    # Updates the specified service with the specified duration. Does not compleate if the specified duration
+    # is too far removed from the currently saved durations (see DURATION_WARN)
+    # If force if True, update the duration anyway, but still returning true/false
     def update_duration(self, service, duration, force=False):
         if service in self.services.keys():
             if duration == None:
@@ -80,6 +85,7 @@ class Track:
         if total: return total/amount
         else: return None
 
+    # Returns a dictionary of the current track object
     def to_dict(self):
         d = {
             "title":self.title,
@@ -89,6 +95,7 @@ class Track:
         }
         return d
 
+# Converts a dict into a track object
 def track_from_dict(track_dict):
     title = track_dict['title']
     artist = track_dict['artist']
@@ -121,6 +128,7 @@ def makeRequest(url, method="get", expectedCode=200, *args, **kwargs):
     else:
         raise youtube.ApiError(r.status_code, expectedCode, r.content)
 
+# A wrapper around makeRequest that handles pagination. Returns a list of all returned items
 def pagination(url, *args, **kwargs):
     items = []
     pageToken = None
@@ -138,14 +146,17 @@ def pagination(url, *args, **kwargs):
             break
     return items
 
+# Deletes a playlist from spotify
 def spotify_delete_playlist(auth, playlist_id):
     headers = {"authorization":"Bearer "+auth.token}
     r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id+"/followers", "delete", headers=headers)
 
+# Deletes a plsylist from youtube
 def youtube_delete_playlist(auth, playlist_id):
     headers = {"authorization":"Bearer "+auth.token}
     r = makeRequest("https://www.googleapis.com/youtube/v3/playlists?id="+playlist_id, "delete", headers=headers, expectedCode=204)
 
+# Gets an item from spotify, track, album or playlist
 def spotify_get_item(auth, track_id, itemType="track"):
     types_dict = {
         "track":"tracks", # how the type is formatted in the request URL
@@ -167,6 +178,7 @@ def spotify_get_item(auth, track_id, itemType="track"):
     data = json.loads(r.content)
     return data
 
+# Gets an item from youtube, video or playlist
 def youtube_get_item(auth, video_id, itemType="video"):
     types_dict = {
         "video":"videos",
@@ -185,6 +197,7 @@ def youtube_get_item(auth, video_id, itemType="video"):
     else:
         return None
 
+# Reads all loaded spotify playlists
 def spotify_read_playlists(auth, ids=False):
     playlists = {}
     headers = {"authorization":"Bearer "+auth.token}
@@ -202,7 +215,8 @@ def spotify_read_playlists(auth, ids=False):
             playlists[item['name']] = spotify_read_playlist(auth, playlist_id)
     return playlists
 
-def spotify_read_playlist(auth, playlist_id, album=False): # Album parameter to read an album
+# Reads a single spotify playlist
+def spotify_read_playlist(auth, url):
     tracks = []
     headers = {
         "authorization": "Bearer " + auth.token,
@@ -229,6 +243,7 @@ def spotify_read_playlist(auth, playlist_id, album=False): # Album parameter to 
         tracks.append(new_track)
     return tracks
 
+# Creates a spotify playlist
 def spotify_write_playlist(auth, name, desc, tracks, public=True):
     ids = []
     for track in tracks:
@@ -249,6 +264,7 @@ def spotify_write_playlist(auth, name, desc, tracks, public=True):
     r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists/" + playlist_id + "/tracks", "post", 201, json=data, headers=headers)
     return playlist_id
 
+# Updates a spotify playlist
 def spotify_update_playlist(auth, playlist_object, name, desc, public=True):
     headers = {
         "authorization": "Bearer " + auth.token,
@@ -262,7 +278,8 @@ def spotify_update_playlist(auth, playlist_object, name, desc, public=True):
     playlist_id = playlist_object['id']
     r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id, "put", headers=headers, data=data)
 
-def spotify_get_playlist_info(auth, playlist_id, album=False):
+# Gets spotify playlist info
+def spotify_get_playlist_info(auth, playlist_id):
     headers = {
         "authorization": "Bearer " + auth.token,
     }
@@ -273,6 +290,7 @@ def spotify_get_playlist_info(auth, playlist_id, album=False):
     data = json.loads(r.content)
     return data
 
+# Updates a youtube playlist
 def youtube_update_playlist(auth, playlist_object, name, desc, public=True):
     if public:
         privacy = "public"
@@ -294,6 +312,7 @@ def youtube_update_playlist(auth, playlist_object, name, desc, public=True):
         part = "snippet%2Cstatus"
     r = makeRequest("https://www.googleapis.com/youtube/v3/playlists?part="+part, "put", headers=headers, json=data)
 
+# Gets info from a youtube playlist
 def youtube_get_playlist_info(auth, playlist_id):
     headers = {
         "authorization": "Bearer " + auth.token,
@@ -302,6 +321,7 @@ def youtube_get_playlist_info(auth, playlist_id):
     data = json.loads(r.content)
     return data['items'][0]
 
+# Creates a youtube playlist
 def youtube_write_playlist(auth, name, desc, tracks, public=True):
     if public:
         privacy = "public"
@@ -342,7 +362,7 @@ def youtube_write_playlist(auth, name, desc, tracks, public=True):
         r = makeRequest("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet", "post", 200, headers=headers, json=data)
     return playlist_id
 
-
+# Reads all loaded youtube playlists
 def youtube_read_playlists(auth, ids=False):
     playlists = {}
     headers = {
@@ -357,6 +377,7 @@ def youtube_read_playlists(auth, ids=False):
             playlists[item['snippet']['title']] = youtube_read_playlist(auth, item['id'])
     return playlists
 
+# Reads a single youtube playlist
 def youtube_read_playlist(auth, playlist_id):
     ids_request_limit = 40
     playlist = []
