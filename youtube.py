@@ -97,6 +97,29 @@ def delete_account(username):
 
 
 class token:
+    """
+        An class that handles the YouTube Data API authentication process, including user login and token refreshing.
+
+        Args:
+            scope: A string of all scopes that the token should use, seperated by spaces. See the YouTube Data API documentation for what scopes are needed for what.
+            (e.g. youtube, userprofile.email"). Usually just youtube should be specified.
+            username: Optional. The username that the token should use. If no username is specified all cached usernames are ignored and a new token is generated.
+            returnUrl: Optional. If set to True, the token object stops at the point where a browser should be opened, and instead sets the url attribute. If set to a string, that url is used as the callback url to complete the sign in process.
+            request: Optional. If set to True, the object does not request any new tokens, but stores current cached tokens matching the scope in the auths variable. Therefore the username parameter would be ignored
+
+        Attributes:
+            scope: The all scopes of the token, as a string sperated by spaces
+            token: The access token that the user logged in with.
+            refresh: The refresh token. YouTube Web API tokens expire after an hour. Use the refresh_token function rather than manually refreshing the token.
+            username: The username that the token belongs to.
+            auths: If request if True, all stored tokens matching the specified scope
+            url: The url to enter into a browser if the returnUrl paramter is set to True
+
+        Raises:
+            ScopeError: The scope is invalid, or formatted incorrectly
+            UsernameError: The username that the token belongs to does not match the username that this object was called with. This means that the user logged in with a different username than expected.
+            ApiError: The API errored in some way. The returned error will be displayed if it exists.
+    """
     def __init__(self, scope, username=None, returnUrl=False, request=False):
         for x in scope.split(" "):
             if not x.replace("https://www.googleapis.com/auth/", "") in valid_scopes:
