@@ -518,6 +518,7 @@ class MainWindow(QWidget):
         return playlists
 
     def exportJson(self, tracks):
+        tracks = copy.deepcopy(tracks)
         for x, track in enumerate(tracks):
             tracks[x] = track.to_dict()
         playlists = self.readPlaylistsJson(convert=False)
@@ -542,7 +543,7 @@ class MainWindow(QWidget):
         except KeyError:
             artist = "" # we can live with no artist
         track = apicontrol.Track(title, artist)
-        track.update_service("local", os.path.split(filename)[1])
+        track.update_service("local", filename)
         track.update_duration("local", mp3.info.length)
         return track
 
@@ -774,6 +775,7 @@ class MainWindow(QWidget):
                         item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                         table.setItem(x + offset, y, item)
                 else:
+                    if y == 4: cell = os.path.split(cell)[1] # Only display the filename, not the full path
                     item = QTableWidgetItem(cell)
                     item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     table.setItem(x+offset, y, item)
@@ -805,6 +807,12 @@ class MainWindow(QWidget):
                 detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         if item.column() == 4:
             if self.tracks[item.row()].services["local"]['id']:
+                openAction = contextMenu.addAction("Play")
+                filePath = "file:///" + self.tracks[item.row()].services['local']['id']
+                openAction.triggered.connect(lambda: QDesktopServices.openUrl(QUrl(filePath)))
+                openLocationAction = contextMenu.addAction("Open file location")
+                folderPath = os.path.split(copy.copy(filePath))[0]
+                openLocationAction.triggered.connect(lambda: QDesktopServices.openUrl(QUrl(folderPath)))
                 detatchAction = contextMenu.addAction("Detach Link")
                 detatchAction.triggered.connect(lambda clicked, item=item: self.detatchLink(item))
         contextMenu.exec(QCursor.pos())
