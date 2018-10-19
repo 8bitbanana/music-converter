@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="" />
+    <list default="true" id="a40cb2bb-0af5-485e-8589-e1f061978cf6" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/album_transfer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/disable_shuffle.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/getMusicKey.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/idMatching.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/idMatching.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/playlists_shuffle.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/qt/pyQtSignalExample.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/pyQtSignalExample.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/qt/pyQtTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/pyQtTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/qt/qt_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/qt_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/qt/web.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/web.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search_notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/examples/search_notes.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify_beats.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/universal-music" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/universal-music-uml (drawio).xml" beforeDir="false" afterPath="$PROJECT_DIR$/examples/universal-music-uml (drawio).xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yt_playlist_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/yt_playlist_example.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,12 +33,37 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+            <state relative-caret-position="13073">
+              <caret line="776" column="39" selection-start-line="776" selection-start-column="39" selection-end-line="776" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="apicontrol.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apicontrol.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="748">
+              <caret line="44" selection-start-line="44" selection-end-line="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="search.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="561">
+              <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
               <folding>
-                <element signature="e#288#337#0" />
-                <element signature="e#1296#1394#0" />
-                <element signature="e#1435#1605#0" />
+                <element signature="e#0#54#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -31,20 +72,11 @@
       <file leaf-file-name="youtube.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/youtube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+            <state relative-caret-position="4216">
+              <caret line="248" selection-start-line="248" selection-end-line="248" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="apicontrol.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apicontrol.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2992">
-              <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -53,21 +85,9 @@
         <entry file="file://$PROJECT_DIR$/spotify.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="238">
-              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="search.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/search.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -114,6 +134,14 @@
       <find>failed to</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -140,18 +168,34 @@
     <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="universal-music" type="b2602c69:ProjectViewProjectNode" />
-              <item name="universal-music" type="462c0819:PsiDirectoryNode" />
+              <item name="music-converter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="music-converter" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="music-converter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="music-converter" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="music-converter" type="cbb8eebc:String" user="music-converter" />
             </path>
           </expand>
           <select />
@@ -169,6 +213,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\8bitb\Desktop\music-converter\examples" />
       <recent name="C:\Users\8bitb\OneDrive - Suffolk One\Computer Science\Python\universal-music" />
       <recent name="C:\Users\8bitb\OneDrive - Suffolk One\Computer Science\Python\universal-music\data" />
       <recent name="C:\Users\8bitb\OneDrive - Suffolk One\Computer Science\Python\universal-music\data\auth" />
@@ -217,7 +262,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/idMatching.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\8bitb\Desktop\music-converter\examples\idMatching.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -287,8 +332,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.spotify_beats" />
         <item itemvalue="Python.service_test" />
+        <item itemvalue="Python.spotify_beats" />
         <item itemvalue="Python.getMusicKey" />
         <item itemvalue="Python.idMatching" />
       </list>
@@ -318,25 +363,35 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" weight="0.37636763" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49891067" visible="true" weight="0.11673774" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.2167756" />
       <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" weight="0.32897604" />
-      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
-      <window_info active="true" anchor="right" id="Python Console" order="4" visible="true" weight="0.42643923" />
-      <window_info anchor="right" id="Run" order="5" weight="0.44402984" />
+      <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.32897604" />
+      <window_info anchor="right" id="Python Console" order="4" weight="0.42643923" />
+      <window_info anchor="right" id="Run" order="5" visible="true" weight="0.35341153" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.6013072" />
       <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
-      <window_info anchor="right" id="Debug" order="3" weight="0.4184435" />
+      <window_info anchor="right" id="Debug" order="3" weight="0.30863538" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49891067" weight="0.37636763" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="3" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.2167756" />
+      <window_info anchor="right" id="Run" order="5" weight="0.44402984" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.21023965" />
+      <window_info anchor="right" id="Debug" order="3" weight="0.4184435" />
+      <window_info anchor="bottom" id="Terminal" order="2" weight="0.6013072" />
+      <window_info anchor="bottom" id="Event Log" order="0" side_tool="true" weight="0.32897604" />
+      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
+      <window_info id="Favorites" order="0" sideWeight="0.50108933" side_tool="true" weight="0.17697228" />
+      <window_info anchor="bottom" id="Message" order="3" />
+      <window_info active="true" anchor="right" id="Python Console" order="4" visible="true" weight="0.42643923" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -385,13 +440,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/apicontrol.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="80" column="31" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -601,7 +649,7 @@
     <entry file="file://$PROJECT_DIR$/data/playlists.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/yt_playlist_example.py">
+    <entry file="file://$PROJECT_DIR$/examples/yt_playlist_example.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/album_transfer.py">
@@ -632,10 +680,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/universal-music-uml (drawio).xml">
+    <entry file="file://$PROJECT_DIR$/examples/universal-music-uml (drawio).xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/idMatching.py">
+    <entry file="file://$PROJECT_DIR$/examples/idMatching.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
@@ -656,9 +704,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/content_to_text.patch">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/content_to_text.patch" />
     <entry file="file://$PROJECT_DIR$/service_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="595">
@@ -677,10 +723,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13073">
+          <caret line="776" column="39" selection-start-line="776" selection-start-column="39" selection-end-line="776" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/youtube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+        <state relative-caret-position="4216">
+          <caret line="248" selection-start-line="248" selection-end-line="248" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -690,7 +760,7 @@
     <entry file="file://$PROJECT_DIR$/spotify.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -699,30 +769,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apicontrol.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2992">
-          <caret line="176" column="39" selection-start-line="176" selection-start-column="39" selection-end-line="176" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-          <folding>
-            <element signature="e#288#337#0" />
-            <element signature="e#1296#1394#0" />
-            <element signature="e#1435#1605#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="748">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
         </state>
       </provider>
     </entry>
