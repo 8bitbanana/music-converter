@@ -776,14 +776,6 @@ class MainWindow(QWidget):
                     table.setItem(x+offset, y, item)
         self.updateRequirementButtons()
 
-    # todo - deprecated
-    def updateRow(self, table, track, row):
-        for col, cell in enumerate(track):
-            item = QTableWidgetItem(cell)
-            item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable | Qt.ItemIsSelectable)
-            table.setItem(row, col, item)
-        self.updateRequirementButtons()
-
     def openCustomTrackDialog(self):
         dialog = CustomTrackDialog()
         if dialog.exec_():
