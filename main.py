@@ -26,11 +26,13 @@ youtube_username = None
 spotify_scope = "playlist-read-private playlist-modify-public playlist-modify-private"
 youtube_scope = "youtube"
 
+# Prints out the exception, even if it is in a QThread. Debug
 def except_hook(cls, exception, traceback):
     print(cls, exception, traceback)
     sys.__excepthook__(cls, exception, traceback)
     sys.exit(1)
 
+# Converts a track object into a list for updateTable to display
 def trackToRow(track):
     trackList = [
         track.title,
@@ -41,17 +43,19 @@ def trackToRow(track):
     ]
     return trackList
 
+# Wipes the token cache
 def wipe_cache():
     spotify.wipe_cache()
     youtube.wipe_cache()
 
-# https://martinfitzpatrick.name/article/multithreading-pyqt-applications-with-qthreadpool/
+# Defines signals for the threads to use to pass data
 class WorkerSignals(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
     result = pyqtSignal(object)
     progress = pyqtSignal(int)
 
+# Worker object. Runs the specified function with the specified arguments in the threadpool
 class Worker(QRunnable):
     def __init__(self, fn, *args, **kwargs):
         print("Thread Started - "+str(fn))
@@ -75,7 +79,8 @@ class Worker(QRunnable):
         finally:
             self.signals.finished.emit() # Done
 
-def generateBar(button): # Generates a busy progress bar
+# Generates a busy QProgress bar
+def generateBar(button):
     bar = QProgressBar()
     bar.setMinimum(0)
     bar.setMaximum(0)
@@ -84,6 +89,7 @@ def generateBar(button): # Generates a busy progress bar
     bar.setAlignment(Qt.AlignCenter)
     return bar
 
+# Main Window
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -103,6 +109,7 @@ class MainWindow(QWidget):
         self.initUI()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
 
+    # If playlists.json does not exist, create and initialise it
     def initDataFiles(self):
         head, tail = os.path.split(playlist_file)
         if head and not os.path.isdir(head): os.makedirs(head)
@@ -110,6 +117,7 @@ class MainWindow(QWidget):
             with open(playlist_file, "w") as f:
                 f.write("[]")
 
+    # Main function for creating the UI
     def initUI(self):
         # Defining Widgets
         titleLabel = QLabel("<h1>Music Converter</h1>")
@@ -389,12 +397,12 @@ class MainWindow(QWidget):
         self.setLayout(mainVBox)
 
     # Resizes some buttons whos whose width can only be accessed AFTER the widget has loaded. MenuWrapper calls this after self.show()
-
     def layoutCleanup(self):
         self.importLocalButton.setFixedWidth(self.importSpotifyStack.width())
         self.loadButton.setFixedWidth(self.importSpotifyStack.width())
         self.saveButton.setFixedWidth(self.exportSpotifyStack.width())
 
+    # Updates sAuth and yAuth to tokens created using the specified usernames s and y
     def updateAuths(self, s, y, **kwargs):
         spotifyToken = None
         youtubeToken = None
@@ -410,6 +418,7 @@ class MainWindow(QWidget):
             self.settings.setValue("logins/youtube", None)
         self.sAuth, self.yAuth = spotifyToken, youtubeToken
 
+    # Thread wrapper for updateAuths
     def getAuthsThreadWrapper(self, *args, **kwargs):
         worker = Worker(self.updateAuths, *args, **kwargs)
         worker.signals.finished.connect(self.thread_complete)
@@ -417,6 +426,7 @@ class MainWindow(QWidget):
         worker.signals.error.connect(self.showErrorMessage)
         self.threadpool.start(worker)
 
+    # Wipes all accounts after a confirmation dialog box
     def wipeAccounts(self):
         messageBox = QMessageBox()
         messageBox.setWindowTitle(" ")
@@ -434,6 +444,10 @@ class MainWindow(QWidget):
             self.yAuth = None
         self.updateRequirementButtons()
 
+    # Shows an error message popup.
+    # error - The error object returned
+    # customText - Custom text to display instead of the raw error description
+    # customTitle - A custom title
     def showErrorMessage(self, error=None, customText=None, customTitle="An Error Occured"):
         if error != None:
             exctype = error[0]
@@ -451,6 +465,7 @@ class MainWindow(QWidget):
         message.setWindowModality(Qt.ApplicationModal)
         message.exec()
 
+    # Uses self.requirements to work out which buttons need to be greyed out to prevent errors
     def updateRequirementButtons(self):
         allItems = []
         for x in self.requirements.values(): allItems += x[1]
@@ -463,6 +478,7 @@ class MainWindow(QWidget):
                         state = False
             item.setEnabled(state)
 
+    # Updates the remove button to selected or everything
     def updateRemoveButton(self):
         selected = len(self.table.selectedIndexes()) != 0
         if selected:
@@ -470,6 +486,7 @@ class MainWindow(QWidget):
         else:
             self.removeButton.setText("Remove\nEverything")
 
+    # Removes selected rows, if any. If no rows are selected, wipe the table after a confirmation box.
     def removeSelected(self):
         selected = []
         oldTracks = copy.deepcopy(self.tracks)
@@ -495,12 +512,15 @@ class MainWindow(QWidget):
                 self.updateTable(self.table, [], False)
         self.updateRemoveButton()
 
+    # Prints the thread. Debug
     def printThread(self, s):
         print(s)
 
+    # For seeing when a thread is completed. Debug.
     def thread_complete(self):
         print("Thread complete")
 
+    # Reads the playlist.json file into a dict. If convert is true, all tracks are converted to track objects.
     def readPlaylistsJson(self, convert=True):
         f = open(playlist_file)
         playlists = f.read()
@@ -515,6 +535,7 @@ class MainWindow(QWidget):
                     playlists[playlist][x] = apicontrol.track_from_dict(track)
         return playlists
 
+    # Updates playlists.json with the tracks specified. Runs ExportPlaylistDialog to get the playlist name
     def exportJson(self, tracks):
         for x, track in enumerate(tracks):
             tracks[x] = track.to_dict()
@@ -529,6 +550,7 @@ class MainWindow(QWidget):
         f.write(json.dumps(playlists))
         f.close()
 
+    # Reads the specified MP3 file, returning a track object
     def readLocalMP3(self, filename):
         mp3 = EasyMP3(filename)
         try:
@@ -544,6 +566,7 @@ class MainWindow(QWidget):
         track.update_duration("local", mp3.info.length)
         return track
 
+    # Opens a QFileDialog to get a list of files, then imports the selected files into the central table
     def importLocal(self):
         dialog = QFileDialog()
         dialog.setAcceptMode(QFileDialog.AcceptOpen)
@@ -559,6 +582,7 @@ class MainWindow(QWidget):
                 if track: tracks.append(track)
             self.appendTableThreadWrapper(tracks)
 
+    # Imports the selected playlist from playlists.json to the central table
     def importJson(self):
         playlists = self.readPlaylistsJson()
         dialog = ImportPlaylistDialog(playlists)
@@ -566,6 +590,7 @@ class MainWindow(QWidget):
             selected_playlist = playlists[dialog.selected_playlist]
             self.appendTableThreadWrapper(selected_playlist)
 
+    # Runs ExportPlaylistDialog to get the target playlist details, then runs a thread to export the tracks
     def initExportThread(self, service):
         dialog = ExportPlaylistDialog(service)
         if dialog.exec_():
@@ -591,14 +616,17 @@ class MainWindow(QWidget):
             raise ValueError("Invalid service for initExportThread - "+service)
         self.threadpool.start(worker)
 
+    # Exports a spotify playlist with the specified parameters
     def exportSpotify(self, name, desc, tracks, public, *args, **kwargs):
         playlist_id = apicontrol.spotify_write_playlist(self.sAuth, name, desc, tracks, public)
         return playlist_id
 
+    # Exports a youtube playlist with the specified parameters
     def exportYoutube(self, name, desc, tracks, public, *args, **kwargs):
         playlist_id = apicontrol.youtube_write_playlist(self.yAuth, name, desc, tracks, public)
         return playlist_id
 
+    # Thread wrapper for importing tracks
     def initImportThread(self, service, fetchStack):
         if service == "spotify":
             fn = self.importSpotify
@@ -618,28 +646,34 @@ class MainWindow(QWidget):
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
         self.threadpool.start(worker)
 
+    # Get all spotify playlists
     def importSpotify(self, *args, **kwargs):
         playlists = apicontrol.spotify_read_playlists(self.sAuth)
         return playlists
 
+    # Get all youtube playlists
     def importYoutube(self, *args, **kwargs):
         playlists = apicontrol.youtube_read_playlists(self.yAuth)
         return playlists
 
+    # Opens the playlist dialog to pick a playlist, then updates the table with the chosen playlist
     def openPlaylistDialog(self, playlists):
         dialog = ImportPlaylistDialog(playlists)
         if dialog.exec_():
             selected_playlist = dialog.selected_playlist
             self.appendTableThreadWrapper(playlists[selected_playlist])
 
+    # Thread wrapper for updateTable, append=False
     def updateTableThreadWrapper(self, tracks):
         self.updateTable(self.table, tracks, False)
+
+    # Thread wrapper for updateTable, append=True
     def appendTableThreadWrapper(self, tracks):
         self.updateTable(self.table, tracks, True)
 
-    # selected - update only this list of rows
-    # displayProgress - update the progress bar with the progress of the update
-    # changeTextOnFail - change the text of this button to Retry (for the central table buttons)
+    # Thread wrapper for updating a list of tracks
+    # selected - Update only this list of rows. If None update all rows.
+    # displayProgress - Update the progress bar with the progress of the update
     def initUpdateThread(self, service, fetchStack, selected=None, displayProgress=False):
         tracks = copy.deepcopy(self.tracks)
         if service == "spotify":
@@ -666,6 +700,7 @@ class MainWindow(QWidget):
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
         self.threadpool.start(worker)
 
+    # Update a list of spotify tracks
     def updateSpotify(self, tracks, progressCallback, selected=None, *args, **kwargs):
         progressCallback.emit(0)
         for i, track in enumerate(tracks):
@@ -686,6 +721,7 @@ class MainWindow(QWidget):
             progressCallback.emit(round((i+1)/len(tracks)*100))
         return tracks
 
+    # Update a list of youtube tracks
     def updateYoutube(self, tracks, progressCallback, selected=None, *args, **kwargs):
         progressCallback.emit(0)
         for i, track in enumerate(tracks):
@@ -706,6 +742,7 @@ class MainWindow(QWidget):
             progressCallback.emit(round((i + 1) / len(tracks) * 100))
         return tracks
 
+    # Deprecated. Makes the whole table open or closed for editing.
     def setTableEdit(self, edit):
         for row in range(self.table.rowCount()):
             for col in range(self.table.columnCount()):
@@ -715,11 +752,13 @@ class MainWindow(QWidget):
                     else:
                         self.table.item(row, col).setFlags(TABLEITEM_FLAGS_NOEDIT)
 
+    # Shuffles the table
     def shuffleTable(self):
         tracks = self.tracks
         random.shuffle(tracks)
         self.updateTable(self.table, tracks)
 
+    # Undos the last action in the undoStack
     def undo(self):
         if self.undoStack:
             fn = self.undoStack.pop()
@@ -729,12 +768,15 @@ class MainWindow(QWidget):
             self.undoStack = undoStack # To prevent the undoStack from being edited by the function we are undoing from
             self.updateRequirementButtons()
 
+    # Redos the last action in the redoStack
     def redo(self):
         if self.redoStack:
             fn = self.redoStack.pop()
             fn()
             self.updateRequirementButtons()
 
+    # Updates the specified table with the specified tracks.
+    # If append is True, append the specified tracks to the existing tracks in the table.
     def updateTable(self, table, tracks, append=False):
         oldTracks = copy.deepcopy(self.tracks)
         self.undoStack.append(lambda self=self, table=table, oldTracks=oldTracks: self.updateTable(table, oldTracks, append=False))
@@ -776,18 +818,21 @@ class MainWindow(QWidget):
                     table.setItem(x+offset, y, item)
         self.updateRequirementButtons()
 
+    # Opens CustomTrackDialog
     def openCustomTrackDialog(self):
         dialog = CustomTrackDialog()
         if dialog.exec_():
             track = dialog.track
             self.updateTable(self.table, [track], True)
 
+    # Opens ReorderDialog
     def openReorderDialog(self):
         dialog = ReorderDialog(self.tracks)
         if dialog.exec_():
             tracks = dialog.tracks
             self.updateTable(self.table, tracks)
 
+    # Opens AccountsDialog, passing the currently saved tokens from the spotify & youtube modules
     def openAccountsDialog(self):
         spotifyCachedTokens = spotify.token(spotify_scope, request=True).auths
         youtubeCachedTokens = youtube.token(youtube_scope, request=True).auths
@@ -803,6 +848,7 @@ class MainWindow(QWidget):
             print("Accounts updated to " + str(self.spotifyUsername) + " and " + str(self.youtubeUsername))
         self.updateRequirementButtons()
 
+    # Opens ManagePlaylistDialog, passing the users spotify & youtube playlists
     def openManagePlaylistDialog(self):
         spotifyPlaylists = None
         youtubePlaylists = None
@@ -812,12 +858,14 @@ class MainWindow(QWidget):
         if dialog.exec_():
             pass
 
+    # Opens the TrackSearchDialog
     def openTrackSearchDialog(self):
         dialog = TrackSearchDialog(self.sAuth, self.yAuth, self.threadpool)
         if dialog.exec_():
             track = dialog.track
             self.updateTable(self.table, [track], append=True)
 
+# Dialog to search for tracks by name
 class TrackSearchDialog(QDialog):
     def __init__(self, sAuth, yAuth, threadpool):
         super().__init__()
@@ -827,6 +875,7 @@ class TrackSearchDialog(QDialog):
         self.threadpool = threadpool
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         searchBar = QLineEdit()
         searchBar.setMinimumWidth(SEARCH_TABLE_FIXED_WIDTH)
@@ -893,6 +942,7 @@ class TrackSearchDialog(QDialog):
         self.setWindowTitle("Search for a Track")
         self.show()
 
+    # Sets enables/disables the specified table. Add a custom message with message
     def tableSetEnabled(self, table, enabled, message="No Results"):
         table.setEnabled(enabled)
         table.setShowGrid(enabled)
@@ -906,6 +956,7 @@ class TrackSearchDialog(QDialog):
             item = QTableWidgetItem(message)
             table.setItem(0, 0, item)
 
+    # Thread wrapper for doSearch. Disables respecive tables until the search is done
     def searchAll(self):
         print("searchAll")
         if self.sAuth:
@@ -921,6 +972,7 @@ class TrackSearchDialog(QDialog):
             worker.signals.error.connect(lambda error: self.tableSetEnabled(self.youtubeTable, False, message="Error"))
             self.threadpool.start(worker)
 
+    # Formats a duration in seconds into a string for updateTable to display
     def formatTime(self, seconds):
         m, s = divmod(seconds, 60)
         h, m = divmod(m, 60)
@@ -930,6 +982,7 @@ class TrackSearchDialog(QDialog):
         else:
             return "%d:%02d" % (m, s)
 
+    # Updates the specified service's table with results, adding Add buttons
     def updateTable(self, service, results):
         if service == "spotify":
             table = self.spotifyTable
@@ -958,6 +1011,7 @@ class TrackSearchDialog(QDialog):
         else:
             self.tableSetEnabled(table, False, "No Results")
 
+    # Checks for possibly valid ids in the search, returning a dictionary with tracks, playlists and albums
     def matchId(self, service, text):
         requirements = {
             "spotify": {
@@ -996,6 +1050,7 @@ class TrackSearchDialog(QDialog):
             "albums": [x for x in substrings if len(x) == requirements[service]['length']['album']]
         }
 
+    # Searches. Gets possible results for matchId and the search module
     def doSearch(self, service, **kwargs):
         query = self.searchBar.text()
         if query == "": return []
@@ -1056,16 +1111,19 @@ class TrackSearchDialog(QDialog):
             raise ValueError("Invalid service for search")
         return results
 
+    # Closes the dialog, returning the requested track
     def closeDialog(self, track):
         self.track = track
         self.accept()
 
+# Dialog to reorder the tracks loaded in the central table
 class ReorderDialog(QDialog):
     def __init__(self, tracks):
         super().__init__()
         self.tracks = tracks
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         doneButton = QPushButton("Done")
         doneButton.setDefault(True)
@@ -1102,11 +1160,13 @@ class ReorderDialog(QDialog):
         self.setWindowTitle("Reorder Tracks")
         self.show()
 
+    # Closes the dialog, returning the reordered tracks
     def closeDialog(self):
         tracks = [self.mainList.item(i).track for i in range(self.mainList.count())]
         self.tracks = tracks
         self.accept()
 
+# Dialog to add a custom track, specifying title and artist manually
 class CustomTrackDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -1115,6 +1175,7 @@ class CustomTrackDialog(QDialog):
         self.artist = None
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         doneButton = QPushButton("Done")
         doneButton.setEnabled(False)
@@ -1156,15 +1217,18 @@ class CustomTrackDialog(QDialog):
         self.setWindowTitle("Enter Custom Track")
         self.show()
 
+    # Enables the done button if the title and artist bars are populated
     def updateDoneButton(self):
         self.doneButton.setEnabled(len(self.titleEdit.text()) != 0 and len(self.artistEdit.text()) != 0)
 
+    # Closes the dialog, returning a track object
     def closeDialog(self):
         self.title = self.titleEdit.text()
         self.artist = self.artistEdit.text()
         self.track = apicontrol.Track(self.title, self.artist)
         self.accept()
 
+# Dialog for exporting a set of tracks
 # When updating a playlist rather than exporting, pass a dictionary into current
 # with name, desc, and public values so the fields are pre-filled
 class ExportPlaylistDialog(QDialog):
@@ -1193,6 +1257,7 @@ class ExportPlaylistDialog(QDialog):
             self.prefill = False
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         if self.prefill:
             titleLabel = QLabel("<h1>Update {} Playlist</h1>".format(self.service))
@@ -1259,15 +1324,18 @@ class ExportPlaylistDialog(QDialog):
         # window title set in above if statement
         self.show()
 
+    # Enables the done button if nameEdit is populated
     def updateDoneButton(self):
         self.doneButton.setEnabled(len(self.nameEdit.text()) != 0)
 
+    # Closes the dialog, returning name, desc and public
     def closeDialog(self):
         self.name = self.nameEdit.text()
         self.desc = self.descEdit.toPlainText()
         self.public = self.publicCheckBox.isChecked()
         self.accept()
 
+# Dialog for managing Spotify/YouTube playlists
 class ManagePlaylistDialog(QDialog):
     def __init__(self, spotifyPlaylists, youtubePlaylists, sAuth, yAuth):
         super().__init__()
@@ -1277,6 +1345,7 @@ class ManagePlaylistDialog(QDialog):
         self.yAuth = yAuth
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         spotifyLabel = QLabel("Spotify")
         youtubeLabel = QLabel("YouTube")
@@ -1334,6 +1403,7 @@ class ManagePlaylistDialog(QDialog):
         self.setWindowTitle("Manage Playlists")
         self.show()
 
+    # Updates a playlist. Uses ExportPlaylistDialog, passing a dictionary into current to prefill the values
     def update_playlist(self, service, playlist_name, playlist_id):
         if service == "spotify":
             playlist = apicontrol.spotify_get_playlist_info(self.sAuth, playlist_id)
@@ -1370,6 +1440,7 @@ class ManagePlaylistDialog(QDialog):
                 self.youtubePlaylists[dialog.name] = self.youtubePlaylists.pop(playlist_name)
             self.updateTable(service)
 
+    # Deletes the specified playlist, after a confirmation box
     def delete_playlist(self, service, playlist_name, playlist_id):
         messageBox = QMessageBox()
         messageBox.setWindowTitle(" ")
@@ -1391,6 +1462,7 @@ class ManagePlaylistDialog(QDialog):
         else:
             raise ValueError("Invalid service for delete_playlist")
 
+    # Updates the specified service's table
     def updateTable(self, service):
         if service == "spotify":
             table = self.spotifyTable
@@ -1432,6 +1504,7 @@ class ManagePlaylistDialog(QDialog):
                             self.delete_playlist(service, playlist_name, playlist_id)
                 )
 
+# Dialog for selecting a playlist to import
 class ImportPlaylistDialog(QDialog):
     def __init__(self, playlists):
         super().__init__()
@@ -1439,6 +1512,7 @@ class ImportPlaylistDialog(QDialog):
         self.selected_playlist = None
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
 
         mainList = QListWidget()
@@ -1470,10 +1544,14 @@ class ImportPlaylistDialog(QDialog):
         self.setWindowModality(Qt.ApplicationModal)
         self.show()
 
+    # Closes the dialog, returning the selected playlist
     def closeDialog(self):
         self.selected_playlist = self.playlists[self.mainList.currentRow()]
         self.accept()
 
+# Dialog for opening a browser. Specify a URL to start at with startUrl.
+# The dialog will quit when the current URL has quitUrl CONTAINED within it. E.g. specifying "localhost?code="
+# in quitUrl will get the browser to quit when an auth code is returned
 class BrowserDialog(QDialog):
     def __init__(self, startUrl, quitUrl = None):
         super().__init__()
@@ -1481,6 +1559,7 @@ class BrowserDialog(QDialog):
         self.quitUrl = quitUrl
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
         backButton = QPushButton("Back")
         forwardButton = QPushButton("Forward")
@@ -1520,6 +1599,7 @@ class BrowserDialog(QDialog):
         self.setWindowTitle("Web Browser")
         self.show()
 
+    # Checks to see if the current url matches quitUrl
     def checkUrl(self):
         if self.quitUrl:
             url = self.browser.url().toString()
@@ -1527,11 +1607,13 @@ class BrowserDialog(QDialog):
                 self.url = url
                 self.accept()
 
+    # Updates the url label with the new url
     def updateUrlLabel(self, url):
         url = url.toString()
         self.urlBar.setText(url)
         self.urlBar.setCursorPosition(0)
 
+# Dialog for managing loaded accounts
 class AccountsDialog(QDialog):
     def __init__(self, spotifyAccounts, youtubeAccounts, spotifyCurrent=None, youtubeCurrent=None):
         super().__init__()
@@ -1544,6 +1626,7 @@ class AccountsDialog(QDialog):
         self.reloadFlag = False
         self.initUI()
 
+    # Main function for creating the UI
     def initUI(self):
 
         spotifyLabel = QLabel("Spotify")
@@ -1610,6 +1693,7 @@ class AccountsDialog(QDialog):
         self.setWindowTitle("Manage Accounts")
         self.show()
 
+    # Changes the specified service's current account to the specified account
     def changeAccount(self, service, newAccount):
         if service == "spotify":
             if self.spotifyCurrent == newAccount:
@@ -1624,6 +1708,7 @@ class AccountsDialog(QDialog):
         else:
             raise ValueError("Invalid service for changeAccount")
 
+    # Deletes the specified account from the specified service
     def deleteAccount(self, service, account):
         messageBox = QMessageBox()
         messageBox.setWindowTitle(" ")
@@ -1644,6 +1729,7 @@ class AccountsDialog(QDialog):
                 self.youtubeAccounts.remove(account)
             self.updateTable(service)
 
+    # Starts the process of creating a new account in the specified service
     def newAccount(self, service):
         if service == "spotify":
             url = spotify.token(spotify_scope, returnUrl=True).url
@@ -1664,6 +1750,7 @@ class AccountsDialog(QDialog):
         else:
             raise ValueError("Invalid service for newAccount")
 
+    # Updates the specified service's table
     def updateTable(self, service):
         if service == "spotify":
             table = self.spotifyTable
@@ -1699,6 +1786,7 @@ class AccountsDialog(QDialog):
             switchButton.clicked.connect(lambda clicked, service=service: self.updateTable(service))
             removeButton.clicked.connect(lambda clicked, service=service, account=account: self.deleteAccount(service, account))
 
+# A QMainWindow wrapper around MainWindow to allow the menu to be displayed.
 class MenuWrapper(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -1708,10 +1796,12 @@ class MenuWrapper(QMainWindow):
         self.show()
         self.centralWidget().layoutCleanup()
 
+# Main function. Initialises Qt
 def main():
     sys.excepthook = except_hook
     app = QApplication(sys.argv)
     win = MenuWrapper()
     sys.exit(app.exec_())
 
+# Main function is not run if this file is imported as a module
 if __name__ == "__main__": main()
