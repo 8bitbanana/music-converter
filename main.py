@@ -1149,7 +1149,7 @@ class TrackSearchDialog(QDialog):
             self.tableSetEnabled(table, False, "No Results")
 
     # Checks for possibly valid ids in the search, returning a dictionary with tracks, playlists and albums
-    def matchId(self, service, text):
+    def matchId(self, service, text, searchType):
         requirements = {
             "spotify": {
                 "length":{
