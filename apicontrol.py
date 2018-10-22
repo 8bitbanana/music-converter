@@ -216,7 +216,7 @@ def spotify_read_playlists(auth, ids=False):
     return playlists
 
 # Reads a single spotify playlist
-def spotify_read_playlist(auth, url):
+def spotify_read_playlist(auth, playlist_id, album=False):
     tracks = []
     headers = {
         "authorization": "Bearer " + auth.token,
@@ -279,7 +279,7 @@ def spotify_update_playlist(auth, playlist_object, name, desc, public=True):
     r = makeRequest("https://api.spotify.com/v1/playlists/"+playlist_id, "put", headers=headers, data=data)
 
 # Gets spotify playlist info
-def spotify_get_playlist_info(auth, playlist_id):
+def spotify_get_playlist_info(auth, playlist_id, album=False):
     headers = {
         "authorization": "Bearer " + auth.token,
     }
