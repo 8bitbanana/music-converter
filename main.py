@@ -102,6 +102,7 @@ class MainWindow(QWidget):
         self.youtubeUsername = self.settings.value("logins/youtube", None) # if the key doesn't exist
         self.sAuth = None
         self.yAuth = None
+        self.fetchLock = False
         self.updateAuths(self.spotifyUsername, self.youtubeUsername)
         self.threadpool = QThreadPool()
         self.threadpool.setMaxThreadCount(MAX_THREADS)
@@ -381,6 +382,32 @@ class MainWindow(QWidget):
                 [
                     redoAction
                 ]
+            ],
+            'fetchLock': [
+                lambda: not self.fetchLock,
+                [
+                    importSpotifyButton,
+                    importYoutubeButton,
+                    importLocalButton,
+                    spotifyFetchButton,
+                    youtubeFetchButton,
+                    loadButton,
+                    removeButton,
+
+                    undoAction,
+                    redoAction,
+                    tableReorderAction,
+                    tableShuffleAction,
+                    addSearchTrackAction,
+                    addCustomTrackAction,
+                ]
+            ],
+            'threadLock': [
+                lambda: self.threadpool.activeThreadCount() == 0,
+                [
+                    spotifyFetchButton,
+                    youtubeFetchButton
+                ]
             ]
         }
 
@@ -416,6 +443,7 @@ class MainWindow(QWidget):
         worker.signals.finished.connect(self.updateRequirementButtons)
         worker.signals.error.connect(self.showErrorMessage)
         self.threadpool.start(worker)
+        self.updateRequirementButtons()
 
     # Wipes all accounts after a confirmation dialog box
     def wipeAccounts(self):
@@ -597,16 +625,19 @@ class MainWindow(QWidget):
             worker = Worker(self.exportSpotify, name, desc, tracks, public)
             worker.signals.finished.connect(self.thread_complete)
             worker.signals.finished.connect(lambda: self.exportSpotifyStack.setCurrentIndex(0))
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.error.connect(self.showErrorMessage)
         elif service == "youtube":
             self.exportYoutubeStack.setCurrentIndex(1)
             worker = Worker(self.exportYoutube, name, desc, tracks, public)
             worker.signals.finished.connect(self.thread_complete)
             worker.signals.finished.connect(lambda: self.exportYoutubeStack.setCurrentIndex(0))
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.error.connect(self.showErrorMessage)
         else:
             raise ValueError("Invalid service for initExportThread - "+service)
         self.threadpool.start(worker)
+        self.updateRequirementButtons()
 
     # Exports a spotify playlist with the specified parameters
     def exportSpotify(self, name, desc, tracks, public, *args, **kwargs):
@@ -623,13 +654,14 @@ class MainWindow(QWidget):
         if service == "spotify":
             fn = self.importSpotify
             worker = Worker(fn)
-
             worker.signals.finished.connect(self.thread_complete)
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.result.connect(self.openPlaylistDialog)
             worker.signals.error.connect(self.showErrorMessage)
         elif service == "youtube":
             worker = Worker(self.importYoutube)
             worker.signals.finished.connect(self.thread_complete)
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.result.connect(self.openPlaylistDialog)
             worker.signals.error.connect(self.showErrorMessage)
         else:
@@ -637,6 +669,7 @@ class MainWindow(QWidget):
         fetchStack.setCurrentIndex(1)
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
         self.threadpool.start(worker)
+        self.updateRequirementButtons()
 
     # Get all spotify playlists
     def importSpotify(self, *args, **kwargs):
@@ -674,6 +707,8 @@ class MainWindow(QWidget):
                 return
             worker = Worker(self.updateSpotify, tracks, selected=selected)
             worker.signals.finished.connect(self.thread_complete)
+            worker.signals.finished.connect(self.updateRequirementButtons)
+            worker.signals.finished.connect(lambda: self.fetchLockWrapper(False))
             worker.signals.result.connect(self.updateTableThreadWrapper)
             if displayProgress: worker.signals.progress.connect(self.spotifyFetchBar.setValue)
             worker.signals.error.connect(self.showErrorMessage)
@@ -683,6 +718,8 @@ class MainWindow(QWidget):
                 return
             worker = Worker(self.updateYoutube, tracks, selected=selected)
             worker.signals.finished.connect(self.thread_complete)
+            worker.signals.finished.connect(self.updateRequirementButtons)
+            worker.signals.finished.connect(lambda: self.fetchLockWrapper(False))
             worker.signals.result.connect(self.updateTableThreadWrapper)
             if displayProgress: worker.signals.progress.connect(self.youtubeFetchBar.setValue)
             worker.signals.error.connect(self.showErrorMessage)
@@ -690,7 +727,13 @@ class MainWindow(QWidget):
             raise ValueError("Invalid service for initImportThread")
         fetchStack.setCurrentIndex(1)
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
+        self.fetchLock = True
         self.threadpool.start(worker)
+        self.updateRequirementButtons()
+
+    # You cannot assign in a lambda function, so this function circumvents that
+    def fetchLockWrapper(self, lock):
+        self.fetchLock = lock
 
     # Update a list of spotify tracks
     def updateSpotify(self, tracks, progressCallback, selected=None, *args, **kwargs):
