@@ -4,7 +4,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtSvg import *
 from mutagen.mp3 import EasyMP3
 
 PROGRAM_NAME = "Universal Music"
@@ -157,16 +156,6 @@ class MainWindow(QWidget):
         youtubeFetchBar.setFixedSize(youtubeFetchButton.maximumSize())
         youtubeFetchBar.setAlignment(Qt.AlignCenter)
         youtubeFetchBar.setTextVisible(True)
-
-        ARROW_IMG = "data\\rightarrow.svg"
-        ARROW_SIZE = (20, 40)
-
-        importArrow = QSvgWidget()
-        importArrow.load(ARROW_IMG)
-        importArrow.setFixedSize(*ARROW_SIZE)
-        exportArrow = QSvgWidget()
-        exportArrow.load(ARROW_IMG)
-        exportArrow.setFixedSize(*ARROW_SIZE)
 
         # Defining Widget Stacks
         importSpotifyStack = QStackedWidget()
