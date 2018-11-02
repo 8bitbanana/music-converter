@@ -1679,20 +1679,21 @@ class ManagePlaylistDialog(QDialog):
         messageBox.setInformativeText("Are you sure?")
         messageBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         messageBox.setDefaultButton(QMessageBox.No)
-        if service == "spotify":
-            messageBox.setText("Deleting " + playlist_name + " from Spotify")
-            if messageBox.exec_():
-                apicontrol.spotify_delete_playlist(self.sAuth, playlist_id)
-                self.spotifyPlaylists.pop(playlist_name)
-                self.updateTable("spotify")
-        elif service == "youtube":
-            messageBox.setText("Deleting " + playlist_name + " from YouTube")
-            if messageBox.exec_():
-                apicontrol.youtube_delete_playlist(self.yAuth, playlist_id)
-                self.youtubePlaylists.pop(playlist_name)
-                self.updateTable("youtube")
-        else:
-            raise ValueError("Invalid service for delete_playlist")
+        if messageBox.exec() == QMessageBox.Yes:
+            if service == "spotify":
+                messageBox.setText("Deleting " + playlist_name + " from Spotify")
+                if messageBox.exec_():
+                    apicontrol.spotify_delete_playlist(self.sAuth, playlist_id)
+                    self.spotifyPlaylists.pop(playlist_name)
+                    self.updateTable("spotify")
+            elif service == "youtube":
+                messageBox.setText("Deleting " + playlist_name + " from YouTube")
+                if messageBox.exec_():
+                    apicontrol.youtube_delete_playlist(self.yAuth, playlist_id)
+                    self.youtubePlaylists.pop(playlist_name)
+                    self.updateTable("youtube")
+            else:
+                raise ValueError("Invalid service for delete_playlist")
 
     # Updates the specified service's table
     def updateTable(self, service):
