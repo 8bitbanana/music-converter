@@ -743,7 +743,7 @@ class MainWindow(QWidget):
 
     # Shuffles the table
     def shuffleTable(self):
-        tracks = self.tracks
+        tracks = copy.deepcopy(self.tracks)
         random.shuffle(tracks)
         self.updateTable(self.table, tracks)
 
