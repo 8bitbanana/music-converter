@@ -707,8 +707,8 @@ class MainWindow(QWidget):
                 return
             worker = Worker(self.updateSpotify, tracks, selected=selected)
             worker.signals.finished.connect(self.thread_complete)
-            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.finished.connect(lambda: self.fetchLockWrapper(False))
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.result.connect(self.updateTableThreadWrapper)
             if displayProgress: worker.signals.progress.connect(self.spotifyFetchBar.setValue)
             worker.signals.error.connect(self.showErrorMessage)
@@ -718,8 +718,8 @@ class MainWindow(QWidget):
                 return
             worker = Worker(self.updateYoutube, tracks, selected=selected)
             worker.signals.finished.connect(self.thread_complete)
-            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.finished.connect(lambda: self.fetchLockWrapper(False))
+            worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.result.connect(self.updateTableThreadWrapper)
             if displayProgress: worker.signals.progress.connect(self.youtubeFetchBar.setValue)
             worker.signals.error.connect(self.showErrorMessage)
