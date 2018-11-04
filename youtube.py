@@ -277,7 +277,6 @@ class token:
                 auths.pop(index)
         return auths
 
-    # Beats me why the code doubles up tokens. It works, I'm not fixing it
     def refresh_token(self):
         """
         Refreshes the access token using the refresh token.
