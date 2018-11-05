@@ -114,7 +114,7 @@ class MainWindow(QWidget):
         if head and not os.path.isdir(head): os.makedirs(head)
         if not os.path.isfile(tail):
             with open(playlist_file, "w") as f:
-                f.write("[]")
+                f.write("{}")
 
     # Main function for creating the UI
     def initUI(self):
