@@ -10,7 +10,7 @@ auth_filename = "data/spotify_auth.json"
 
 head, tail = os.path.split(auth_filename)
 if head and not os.path.isdir(head): os.makedirs(head)
-if not os.path.isfile(tail):
+if not os.path.isfile(auth_filename):
     with open(auth_filename, "w") as f:
         f.write("[]")
 
