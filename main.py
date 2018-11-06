@@ -112,7 +112,7 @@ class MainWindow(QWidget):
     def initDataFiles(self):
         head, tail = os.path.split(playlist_file)
         if head and not os.path.isdir(head): os.makedirs(head)
-        if not os.path.isfile(tail):
+        if not os.path.isfile(playlist_file):
             with open(playlist_file, "w") as f:
                 f.write("{}")
 
