@@ -687,6 +687,7 @@ class MainWindow(QWidget):
             raise ValueError("Invalid service for initImportThread")
         fetchStack.setCurrentIndex(1)
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
+        self.toggleTableButtons(False) # As the table is updated after the thread is finished, there is no need to reenable the buttons afterwards
         self.threadpool.start(worker)
 
     # Update a list of spotify tracks
@@ -806,6 +807,13 @@ class MainWindow(QWidget):
                     item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     table.setItem(x+offset, y, item)
         self.updateRequirementButtons()
+
+    def toggleTableButtons(self, enabled):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                item = self.table.indexWidget(self.table.model().index(row, col))
+                if type(item) == QStackedWidget:
+                    item.widget(0).setEnabled(enabled)
 
     # Opens CustomTrackDialog
     def openCustomTrackDialog(self):
@@ -1438,13 +1446,13 @@ class ManagePlaylistDialog(QDialog):
         messageBox.setDefaultButton(QMessageBox.No)
         if service == "spotify":
             messageBox.setText("Deleting " + playlist_name + " from Spotify")
-            if messageBox.exec_():
+            if messageBox.exec_() == QMessageBox.Yes:
                 apicontrol.spotify_delete_playlist(self.sAuth, playlist_id)
                 self.spotifyPlaylists.pop(playlist_name)
                 self.updateTable("spotify")
         elif service == "youtube":
             messageBox.setText("Deleting " + playlist_name + " from YouTube")
-            if messageBox.exec_():
+            if messageBox.exec_() == QMessageBox.Yes:
                 apicontrol.youtube_delete_playlist(self.yAuth, playlist_id)
                 self.youtubePlaylists.pop(playlist_name)
                 self.updateTable("youtube")
