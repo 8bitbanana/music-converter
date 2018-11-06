@@ -728,6 +728,7 @@ class MainWindow(QWidget):
         fetchStack.setCurrentIndex(1)
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
         self.fetchLock = True
+        self.toggleTableButtons(False) # As the table is updated after the thread is finished, there is no need to reenable the buttons afterwards
         self.threadpool.start(worker)
         self.updateRequirementButtons()
 
@@ -855,6 +856,13 @@ class MainWindow(QWidget):
                     table.setItem(x+offset, y, item)
         table.verticalScrollBar().setValue(scrollPos)
         self.updateRequirementButtons()
+
+    def toggleTableButtons(self, enabled):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                item = self.table.indexWidget(self.table.model().index(row, col))
+                if type(item) == QStackedWidget:
+                    item.widget(0).setEnabled(enabled)
 
     def showTableContextMenu(self, pos):
         clipboard = QGuiApplication.clipboard()
@@ -1679,21 +1687,20 @@ class ManagePlaylistDialog(QDialog):
         messageBox.setInformativeText("Are you sure?")
         messageBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         messageBox.setDefaultButton(QMessageBox.No)
-        if messageBox.exec() == QMessageBox.Yes:
-            if service == "spotify":
-                messageBox.setText("Deleting " + playlist_name + " from Spotify")
-                if messageBox.exec_():
-                    apicontrol.spotify_delete_playlist(self.sAuth, playlist_id)
-                    self.spotifyPlaylists.pop(playlist_name)
-                    self.updateTable("spotify")
-            elif service == "youtube":
-                messageBox.setText("Deleting " + playlist_name + " from YouTube")
-                if messageBox.exec_():
-                    apicontrol.youtube_delete_playlist(self.yAuth, playlist_id)
-                    self.youtubePlaylists.pop(playlist_name)
-                    self.updateTable("youtube")
-            else:
-                raise ValueError("Invalid service for delete_playlist")
+        if service == "spotify":
+            messageBox.setText("Deleting " + playlist_name + " from Spotify")
+            if messageBox.exec_() == QMessageBox.Yes:
+                apicontrol.spotify_delete_playlist(self.sAuth, playlist_id)
+                self.spotifyPlaylists.pop(playlist_name)
+                self.updateTable("spotify")
+        elif service == "youtube":
+            messageBox.setText("Deleting " + playlist_name + " from YouTube")
+            if messageBox.exec_() == QMessageBox.Yes:
+                apicontrol.youtube_delete_playlist(self.yAuth, playlist_id)
+                self.youtubePlaylists.pop(playlist_name)
+                self.updateTable("youtube")
+        else:
+            raise ValueError("Invalid service for delete_playlist")
 
     # Updates the specified service's table
     def updateTable(self, service):
