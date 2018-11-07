@@ -406,7 +406,8 @@ class MainWindow(QWidget):
                 lambda: self.threadpool.activeThreadCount() == 0,
                 [
                     spotifyFetchButton,
-                    youtubeFetchButton
+                    youtubeFetchButton,
+                    lambda state: self.toggleTableButtons(state)
                 ]
             ]
         }
@@ -495,7 +496,19 @@ class MainWindow(QWidget):
                 if item in requirement[1]:
                     if not requirement[0](): # Run the lambda function
                         state = False
-            item.setEnabled(state)
+            if callable(item): # Is the object a function? Call it.
+                item(state)
+            elif item.__module__ == "PyQt5.QtWidgets": # Is the object a QWidget? Enable/disable it.
+                item.setEnabled(state)
+            else: # Otherwise, warn that that object shouldn't be here.
+                print("Invalid object for updateRequirementButtons - " + str(item))
+
+    def toggleTableButtons(self, enabled):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                item = self.table.indexWidget(self.table.model().index(row, col))
+                if type(item) == QStackedWidget:
+                    item.widget(0).setEnabled(enabled)
 
     # Updates the remove button to selected or everything
     def updateRemoveButton(self):
@@ -728,7 +741,6 @@ class MainWindow(QWidget):
         fetchStack.setCurrentIndex(1)
         worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
         self.fetchLock = True
-        self.toggleTableButtons(False) # As the table is updated after the thread is finished, there is no need to reenable the buttons afterwards
         self.threadpool.start(worker)
         self.updateRequirementButtons()
 
@@ -856,13 +868,6 @@ class MainWindow(QWidget):
                     table.setItem(x+offset, y, item)
         table.verticalScrollBar().setValue(scrollPos)
         self.updateRequirementButtons()
-
-    def toggleTableButtons(self, enabled):
-        for row in range(self.table.rowCount()):
-            for col in range(self.table.columnCount()):
-                item = self.table.indexWidget(self.table.model().index(row, col))
-                if type(item) == QStackedWidget:
-                    item.widget(0).setEnabled(enabled)
 
     def showTableContextMenu(self, pos):
         clipboard = QGuiApplication.clipboard()
