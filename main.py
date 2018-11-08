@@ -663,43 +663,66 @@ class MainWindow(QWidget):
         return playlist_id
 
     # Thread wrapper for importing tracks
-    def initImportThread(self, service, fetchStack):
+    def initImportThread(self, service, fetchStack, playlist_id=None, album=False):
         if service == "spotify":
-            fn = self.importSpotify
-            worker = Worker(fn)
+            if playlist_id:
+                worker = Worker(self.importSpotify, playlist_id, album)
+                worker.signals.result.connect(lambda result: self.updateTable(self.table, result, append=True))
+            else:
+                worker = Worker(self.importSpotify)
+                worker.signals.result.connect(lambda result: self.openPlaylistDialog(result, service))
             worker.signals.finished.connect(self.thread_complete)
-            worker.signals.finished.connect(self.updateRequirementButtons)
-            worker.signals.result.connect(self.openPlaylistDialog)
             worker.signals.error.connect(self.showErrorMessage)
         elif service == "youtube":
-            worker = Worker(self.importYoutube)
+            if playlist_id:
+                worker = Worker(self.importYoutube, playlist_id)
+                worker.signals.result.connect(lambda result: self.updateTable(self.table, result, append=True))
+            else:
+                worker = Worker(self.importYoutube)
+                worker.signals.result.connect(lambda result: self.openPlaylistDialog(result, service))
             worker.signals.finished.connect(self.thread_complete)
-            worker.signals.finished.connect(self.updateRequirementButtons)
-            worker.signals.result.connect(self.openPlaylistDialog)
+
             worker.signals.error.connect(self.showErrorMessage)
         else:
             raise ValueError("Invalid service for initImportThread")
-        fetchStack.setCurrentIndex(1)
-        worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
+        if playlist_id:
+            fetchStack.setCurrentIndex(1)
+            worker.signals.finished.connect(lambda: fetchStack.setCurrentIndex(0))
+        else:
+            self.fetchLock = True
+            worker.signals.finished.connect(lambda: self.fetchLockWrapper(False))
+        worker.signals.finished.connect(self.updateRequirementButtons)
         self.threadpool.start(worker)
         self.updateRequirementButtons()
 
     # Get all spotify playlists
-    def importSpotify(self, *args, **kwargs):
-        playlists = apicontrol.spotify_read_playlists(self.sAuth)
-        return playlists
+    def importSpotify(self, playlist_id = None, album=False, *args, **kwargs):
+        if playlist_id:
+            playlist = apicontrol.spotify_read_playlist(self.sAuth, playlist_id, album)
+            return playlist
+        else:
+            playlists = apicontrol.spotify_read_playlists(self.sAuth, ids=True)
+            return playlists
 
     # Get all youtube playlists
-    def importYoutube(self, *args, **kwargs):
-        playlists = apicontrol.youtube_read_playlists(self.yAuth)
-        return playlists
+    def importYoutube(self, playlist_id = None, *args, **kwargs):
+        if playlist_id:
+            playlist = apicontrol.youtube_read_playlist(self.yAuth, playlist_id)
+            return playlist
+        else:
+            playlists = apicontrol.youtube_read_playlists(self.yAuth, ids=True)
+            return playlists
 
     # Opens the playlist dialog to pick a playlist, then updates the table with the chosen playlist
-    def openPlaylistDialog(self, playlists):
+    def openPlaylistDialog(self, playlists, service):
         dialog = ImportPlaylistDialog(playlists)
         if dialog.exec_():
-            selected_playlist = dialog.selected_playlist
-            self.appendTableThreadWrapper(playlists[selected_playlist])
+            if service == "spotify":
+                self.initImportThread(service, self.importSpotifyStack, playlists[dialog.selected_playlist])
+            elif service == "youtube":
+                self.initImportThread(service, self.importYoutubeStack, playlists[dialog.selected_playlist])
+            else:
+                raise ValueError("Invalid service for openPlaylistDialog")
 
     # Thread wrapper for updateTable, append=False
     def updateTableThreadWrapper(self, tracks):
@@ -984,8 +1007,13 @@ class MainWindow(QWidget):
             result = dialog.result
             if type(result) == apicontrol.Track:
                 self.updateTable(self.table, [result], append=True)
-            elif type(result) == list:
-                self.updateTable(self.table, result, append=True)
+            elif type(result) == dict:
+                if result['service'] == "spotify": # todo - loading bar instead of importSpotifyStack
+                    self.initImportThread(result['service'], self.importSpotifyStack, result['id'], result['album'])
+                elif result['service'] == "youtube":
+                    self.initImportThread(result['service'], self.importYoutubeStack, result['id'], result['album'])
+                else:
+                    raise ValueError("Invalid service for TrackSearchDialog return")
 
 # Dialog to search for tracks by name
 class TrackSearchDialog(QDialog):
@@ -1189,7 +1217,7 @@ class TrackSearchDialog(QDialog):
                 elif resultType == "multiple":
                     nameItem = QTableWidgetItem(result['name'])
                     ownerItem = QTableWidgetItem(result['owner'])
-                    lengthItem = QTableWidgetItem(str(len(result['items'])))
+                    lengthItem = QTableWidgetItem(str(result['length']))
                     nameItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     lengthItem.setFlags(TABLEITEM_FLAGS_NOEDIT)
                     table.setItem(i, 0, nameItem)
@@ -1200,7 +1228,7 @@ class TrackSearchDialog(QDialog):
                 if resultType == "single":
                     addButton.clicked.connect(lambda clicked, result=result: self.closeDialog(result))
                 if resultType == "multiple":
-                    addButton.clicked.connect(lambda clicked, result=result['items']: self.closeDialog(result))
+                    addButton.clicked.connect(lambda clicked, result=result: self.closeDialog(result))
         else:
             self.tableSetEnabled(table, False, "No Results")
 
@@ -1253,7 +1281,6 @@ class TrackSearchDialog(QDialog):
         results = []
         matched_ids = self.matchId(service, query, searchType) # matchId automatically takes searchType into account
         if service == "spotify":
-            a=1
             for matched_id in matched_ids['tracks']:
                 data = apicontrol.spotify_get_item(self.sAuth, matched_id, "track")
                 if data:
@@ -1298,13 +1325,19 @@ class TrackSearchDialog(QDialog):
                         newItem = {
                             'name': result['name'],
                             'owner': result['owner']['display_name'],
-                            'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'])
+                            'length': result['tracks']['total'],
+                            'album':False,
+                            'id': result['id'],
+                            'service': 'spotify'
                         }
                     elif searchType == "album":
                         newItem = {
                             'name': result['name'],
                             'owner': result['artists'][0]['name'],
-                            'items': apicontrol.spotify_read_playlist(self.sAuth, result['id'], album=True)
+                            'length': result['tracks']['total'],
+                            'album': True,
+                            'id': result['id'],
+
                         }
                     else:
                         raise ValueError("Invalid searchType for spotify doSearch")
@@ -1333,6 +1366,7 @@ class TrackSearchDialog(QDialog):
             for result in search_results:
                 if resultType == "single":
                     data = apicontrol.youtube_get_item(self.yAuth, result['id']['videoId'], "video")
+                    if data['snippet']['liveBroadcastContent'] != 'none': continue # Filter out livestreams
                     track = apicontrol.Track(
                         data['snippet']['title'],
                         data['snippet']['channelTitle'],
@@ -1347,7 +1381,10 @@ class TrackSearchDialog(QDialog):
                         newItem = {
                             'name': playlist_data['snippet']['title'],
                             'owner': playlist_data['snippet']['channelTitle'],
-                            'items': apicontrol.youtube_read_playlist(self.yAuth, playlist_data['id'])
+                            'length': playlist_data['contentDetails']['itemCount'],
+                            'id': result['id']['playlistId'],
+                            'album': False,
+                            'service':service,
                         }
                     else:
                         raise ValueError("Invalid searchType for youtube doSearch")
@@ -1707,7 +1744,7 @@ class ManagePlaylistDialog(QDialog):
         else:
             raise ValueError("Invalid service for delete_playlist")
 
-    # Updates the specified service's table
+    # Updates the specified service's table todo - Handle playlists with duplicate titles
     def updateTable(self, service):
         if service == "spotify":
             table = self.spotifyTable
