@@ -1333,10 +1333,10 @@ class TrackSearchDialog(QDialog):
                         newItem = {
                             'name': result['name'],
                             'owner': result['artists'][0]['name'],
-                            'length': result['tracks']['total'],
+                            'length': result['total_tracks'],
                             'album': True,
                             'id': result['id'],
-
+                            'service': 'spotify'
                         }
                     else:
                         raise ValueError("Invalid searchType for spotify doSearch")
