@@ -498,7 +498,7 @@ class MainWindow(QWidget):
                         state = False
             if callable(item): # Is the object a function? Call it.
                 item(state)
-            elif item.__module__ == "PyQt5.QtWidgets": # Is the object a QWidget? Enable/disable it.
+            elif "__module__" in dir(item) and item.__module__ == "PyQt5.QtWidgets": # Is the object a QWidget? Enable/disable it.
                 item.setEnabled(state)
             else: # Otherwise, warn that that object shouldn't be here.
                 print("Invalid object for updateRequirementButtons - " + str(item))
@@ -681,7 +681,6 @@ class MainWindow(QWidget):
                 worker = Worker(self.importYoutube)
                 worker.signals.result.connect(lambda result: self.openPlaylistDialog(result, service))
             worker.signals.finished.connect(self.thread_complete)
-
             worker.signals.error.connect(self.showErrorMessage)
         else:
             raise ValueError("Invalid service for initImportThread")
