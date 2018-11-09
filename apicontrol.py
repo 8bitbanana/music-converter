@@ -51,8 +51,6 @@ class Track:
     def update_duration(self, service, duration, force=False):
         if service in self.services.keys():
             # Calculate average of all current durations
-            total = 0
-            amount = 0
             currentDuration = self.get_duration()
             if currentDuration:
                 difference = abs(currentDuration - duration) / max(currentDuration, duration)

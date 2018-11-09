@@ -4,14 +4,14 @@ from urllib.parse import quote
 POWERSET_LIMIT = 25
 
 # Creates a list of all possible combinations of string of words
-# https://stackoverflow.com/questions/464864/how-to-get-all-possible-combinations-of-a-list-s-elements
+# https://stackoverflow.com/a/40986475/8708443
 # I edited this function to remove the empty tuple and the full tuple
 def powerset(iterable):
     s = list(iterable)
     if len(s) > POWERSET_LIMIT:
         raise ValueError("Cannot generate powerset - Initial list too large")
     pow = itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s)+1))
-    pow = (x for x in pow if x != () and x != s)
+    pow = (x for x in pow if x != () and x != tuple(s))
     return pow
 
 # Converts a tuple of strings to a single string, seperated by spaces
