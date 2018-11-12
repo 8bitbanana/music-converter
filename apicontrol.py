@@ -208,11 +208,19 @@ def youtube_get_item(auth, video_id, itemType="video"):
 # Reads all loaded spotify playlists
 def spotify_read_playlists(auth, ids=False):
     playlists = {}
+    marked_items = set()
     headers = {"authorization":"Bearer "+auth.token}
     items = pagination("https://api.spotify.com/v1/me/playlists", "get", headers=headers)
     if ids:
         for item in items:
-            playlists[item['name']] = item['id']
+            if item['name'] in playlists.keys():
+                marked_items.add(item['name'])
+                playlists[item['name'] + " (" + item['id'] + ")"] = item['id']
+            else:
+                playlists[item['name']] = item['id']
+        for marked_name in marked_items:
+            marked_id = playlists.pop(marked_name)
+            playlists[marked_name + " (" + marked_id + ")"] = marked_id
     else:
         for item in items:
             if 'id' in item['tracks']:
@@ -374,13 +382,21 @@ def youtube_write_playlist(auth, name, desc, tracks, public=True):
 # Reads all loaded youtube playlists
 def youtube_read_playlists(auth, ids=False):
     playlists = {}
+    marked_items = set()
     headers = {
         "authorization": "Bearer " + auth.token
     }
     items = pagination("https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&maxResults=50", "get", headers=headers)
     if ids:
         for item in items:
-            playlists[item['snippet']['title']] = item['id']
+            if item['snippet']['title'] in playlists.keys():
+                marked_items.add(item['snippet']['title'])
+                playlists[item['snippet']['title'] + " (" + item['id'] + ")"] = item['id']
+            else:
+                playlists[item['snippet']['title']] = item['id']
+        for marked_name in marked_items:
+            marked_id = playlists.pop(marked_name)
+            playlists[marked_name + " (" + marked_id + ")"] = marked_id
     else:
         for item in items:
             playlists[item['snippet']['title']] = youtube_read_playlist(auth, item['id'])

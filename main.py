@@ -1760,7 +1760,9 @@ class ManagePlaylistDialog(QDialog):
             table.setEnabled(False)
         else:
             table.setRowCount(len(playlists))
-            for i, playlist in enumerate(playlists):
+            playlists_alpha = [x for x in playlists] # Sorts alphabetically
+            playlists_alpha.sort()
+            for i, playlist in enumerate(playlists_alpha):
                 item = QTableWidgetItem(playlist)
                 item.setFlags(TABLEITEM_FLAGS_NOEDIT)
                 updateButton = QPushButton("Change")
@@ -1790,6 +1792,7 @@ class ImportPlaylistDialog(QDialog):
     def __init__(self, playlists):
         super().__init__()
         self.playlists = list(playlists.keys())
+        self.playlists.sort()
         self.selected_playlist = None
         self.initUI()
 
