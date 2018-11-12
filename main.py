@@ -1007,7 +1007,7 @@ class MainWindow(QWidget):
             if type(result) == apicontrol.Track:
                 self.updateTable(self.table, [result], append=True)
             elif type(result) == dict:
-                if result['service'] == "spotify": # todo - loading bar instead of importSpotifyStack
+                if result['service'] == "spotify":
                     self.initImportThread(result['service'], self.importSpotifyStack, result['id'], result['album'])
                 elif result['service'] == "youtube":
                     self.initImportThread(result['service'], self.importYoutubeStack, result['id'], result['album'])
@@ -1057,7 +1057,7 @@ class TrackSearchDialog(QDialog):
 
         self.tableHeaders = ["Title", "Artist", "Duration", ""]
         spotifyTable = QTableWidget(0,4)
-        spotifyTable.setFixedWidth(SEARCH_TABLE_FIXED_WIDTH)
+        spotifyTable.setMinimumWidth(SEARCH_TABLE_FIXED_WIDTH)
         spotifyTable.setMinimumHeight(SEARCH_TABLE_FIXED_HEIGHT)
         #spotifyTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         spotifyTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
@@ -1067,7 +1067,7 @@ class TrackSearchDialog(QDialog):
         spotifyTable.verticalHeader().hide()
         youtubeTable = QTableWidget(0,4)
         youtubeTable.horizontalHeader()
-        youtubeTable.setFixedWidth(SEARCH_TABLE_FIXED_WIDTH)
+        youtubeTable.setMinimumWidth(SEARCH_TABLE_FIXED_WIDTH)
         youtubeTable.setMinimumHeight(SEARCH_TABLE_FIXED_HEIGHT)
         #youtubeTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         youtubeTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
@@ -1634,7 +1634,7 @@ class ManagePlaylistDialog(QDialog):
         #spotifyLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         spotifyTable = QTableWidget(0, 3)
-        spotifyTable.setFixedWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
+        spotifyTable.setMinimumWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
         spotifyTable.setMinimumHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
         #spotifyTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         spotifyTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
@@ -1644,7 +1644,7 @@ class ManagePlaylistDialog(QDialog):
         spotifyTable.setSelectionMode(QAbstractItemView.NoSelection)
 
         youtubeTable = QTableWidget(0, 3)
-        youtubeTable.setFixedWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
+        youtubeTable.setMinimumWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
         youtubeTable.setMinimumHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
         #youtubeTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         youtubeTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
@@ -1743,7 +1743,7 @@ class ManagePlaylistDialog(QDialog):
         else:
             raise ValueError("Invalid service for delete_playlist")
 
-    # Updates the specified service's table todo - Handle playlists with duplicate titles
+    # Updates the specified service's table
     def updateTable(self, service):
         if service == "spotify":
             table = self.spotifyTable
@@ -1917,9 +1917,9 @@ class AccountsDialog(QDialog):
         youtubeLabel = QLabel("YouTube")
 
         spotifyTable = QTableWidget(0, 3)
-        spotifyTable.setFixedWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
-        spotifyTable.setFixedHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
-        spotifyTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        spotifyTable.setMinimumWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
+        spotifyTable.setMinimumHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
+        #spotifyTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         spotifyTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         spotifyTable.horizontalHeader().hide()
         spotifyTable.verticalHeader().hide()
@@ -1927,9 +1927,9 @@ class AccountsDialog(QDialog):
         spotifyTable.setSelectionMode(QAbstractItemView.NoSelection)
 
         youtubeTable = QTableWidget(0, 3)
-        youtubeTable.setFixedWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
-        youtubeTable.setFixedHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
-        youtubeTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        youtubeTable.setMinimumWidth(ACCOUNTS_TABLE_FIXED_WIDTH)
+        youtubeTable.setMinimumHeight(ACCOUNTS_TABLE_FIXED_HEIGHT)
+        #youtubeTable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         youtubeTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         youtubeTable.horizontalHeader().hide()
         youtubeTable.verticalHeader().hide()
