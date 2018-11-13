@@ -4,7 +4,7 @@ TMR_DELAY = 5            # How long to wait for after an error 429 is received (
 ERR_DELAY = 1            # How long to wait before retrying on an error 5XX
 RETRY_ATTEMPTS = 5       # How many times to retry after an error 5XX before giving up
 DURATION_WARN = 0.2      # Decimal difference between two services duration differences to raise an error
-PAGINATION_PAGES = 5     # How many pages to follow with a paging JSON object
+PAGINATION_PAGES = 20    # How many pages to follow with a paging JSON object
 SPOTIFY_IDS_CHUNKS = 100 # Size of the track id "chunks" that spotify_write_playlists sends
 
 # Standardised track object to use throughout the program. Album optional
