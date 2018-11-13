@@ -6,6 +6,14 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import *
 from mutagen.mp3 import EasyMP3
 
+# todo - search for item done/cancel buttons resizing correctly
+# todo - Fetch progress bar working correctly - skipping stuff correctly
+# todo - Managing of JSON playlists
+# todo - music files other than MP3?
+# todo - downloading with youtube_dl
+# todo - cancelling of fetch process
+# todo - multiple fetch jobs at once
+
 PROGRAM_NAME = "Universal Music"
 PROGRAM_AUTHOR = "Ethan Crooks"
 TABLE_COLUMN_WIDTH = 150
@@ -632,17 +640,43 @@ class MainWindow(QWidget):
             public = dialog.public
         else:
             return
+        if service == "spotify":
+            playlists = apicontrol.spotify_read_playlists(self.sAuth, ids=True)
+        elif service == "youtube":
+            playlists = apicontrol.youtube_read_playlists(self.yAuth, ids=True)
+        else:
+            raise ValueError("Invalid service for initExportThread")
+        replace = False
+        if name in playlists.keys():
+            messageBox = QMessageBox()
+            messageBox.setWindowTitle("Existing Playlist")
+            messageBox.setText("This playlist already exists.")
+            messageBox.setInformativeText(
+                "A playlist with this name already exists.\nWould you like to replace the existing playlist, or create a new one?")
+            replaceButton = QPushButton("Replace")
+            addNewButton = QPushButton("Add New")
+            cancelButton = QPushButton("Cancel")
+            messageBox.addButton(replaceButton, QMessageBox.AcceptRole)
+            messageBox.addButton(addNewButton, QMessageBox.AcceptRole)
+            messageBox.addButton(cancelButton, QMessageBox.RejectRole)
+            messageBox.exec() # The AcceptRole and RejectRoles don't seem to be working, but clickedButton can be used as a workaround
+            if messageBox.clickedButton() == replaceButton:
+                replace = True
+            elif messageBox.clickedButton() == addNewButton:
+                replace = False
+            else:
+                return
         tracks = self.tracks
         if service == "spotify":
             self.exportSpotifyStack.setCurrentIndex(1)
-            worker = Worker(self.exportSpotify, name, desc, tracks, public)
+            worker = Worker(self.exportSpotify, name, desc, tracks, public, replace)
             worker.signals.finished.connect(self.thread_complete)
             worker.signals.finished.connect(lambda: self.exportSpotifyStack.setCurrentIndex(0))
             worker.signals.finished.connect(self.updateRequirementButtons)
             worker.signals.error.connect(self.showErrorMessage)
         elif service == "youtube":
             self.exportYoutubeStack.setCurrentIndex(1)
-            worker = Worker(self.exportYoutube, name, desc, tracks, public)
+            worker = Worker(self.exportYoutube, name, desc, tracks, public, replace)
             worker.signals.finished.connect(self.thread_complete)
             worker.signals.finished.connect(lambda: self.exportYoutubeStack.setCurrentIndex(0))
             worker.signals.finished.connect(self.updateRequirementButtons)
@@ -653,7 +687,11 @@ class MainWindow(QWidget):
         self.updateRequirementButtons()
 
     # Exports a spotify playlist with the specified parameters
-    def exportSpotify(self, name, desc, tracks, public, *args, **kwargs):
+    def exportSpotify(self, name, desc, tracks, public, replace=False, *args, **kwargs):
+        if replace:
+            playlists = apicontrol.spotify_read_playlists(self.sAuth, ids=True)
+            if name in playlists.keys():
+                apicontrol.spotify_delete_playlist(self.sAuth, playlists[name])
         playlist_id = apicontrol.spotify_write_playlist(self.sAuth, name, desc, tracks, public)
         return playlist_id
 
@@ -774,6 +812,7 @@ class MainWindow(QWidget):
     def updateSpotify(self, tracks, progressCallback, selected=None, *args, **kwargs):
         progressCallback.emit(0)
         for i, track in enumerate(tracks):
+            progressCallback.emit(round((i) / len(tracks) * 100))
             if selected != None and not i in selected:
                 continue
             if track.services['spotify']['id'] != None:
@@ -788,7 +827,6 @@ class MainWindow(QWidget):
             else:
                 print(str(track) + " updated")
                 tracks[i] = new_track
-            progressCallback.emit(round((i+1)/len(tracks)*100))
         return tracks
 
     # Update a list of youtube tracks
@@ -1097,8 +1135,10 @@ class TrackSearchDialog(QDialog):
         tableGrid.addWidget(youtubeTable, 1,1)
 
         buttonHBox = QHBoxLayout()
+        buttonHBox.addStretch(1)
         buttonHBox.addWidget(doneButton)
         buttonHBox.addWidget(cancelButton)
+        buttonHBox.addStretch(1)
 
         mainVBox = QVBoxLayout()
         mainVBox.addLayout(searchHBox)
