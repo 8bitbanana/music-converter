@@ -1,10 +1,11 @@
 import spotify, youtube, requests, json, time, copy
 
-TMR_DELAY = 5        # How long to wait for after an error 429 is received (too many requests)
-ERR_DELAY = 1        # How long to wait before retrying on an error 5XX
-RETRY_ATTEMPTS = 5   # How many times to retry after an error 5XX before giving up
-DURATION_WARN = 0.2  # Decimal difference between two services duration differences to raise an error
-PAGINATION_PAGES = 5 # How many pages to follow with a paging JSON object
+TMR_DELAY = 5            # How long to wait for after an error 429 is received (too many requests)
+ERR_DELAY = 1            # How long to wait before retrying on an error 5XX
+RETRY_ATTEMPTS = 5       # How many times to retry after an error 5XX before giving up
+DURATION_WARN = 0.2      # Decimal difference between two services duration differences to raise an error
+PAGINATION_PAGES = 20    # How many pages to follow with a paging JSON object
+SPOTIFY_IDS_CHUNKS = 100 # Size of the track id "chunks" that spotify_write_playlists sends
 
 # Standardised track object to use throughout the program. Album optional
 class Track:
@@ -236,8 +237,9 @@ def spotify_write_playlist(auth, name, desc, tracks, public=True):
     }
     r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists", "post", 201, json=data, headers=headers)
     playlist_id = json.loads(r.content)['id']
-    data = {"uris":ids}
-    r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists/" + playlist_id + "/tracks", "post", 201, json=data, headers=headers)
+    data_chunks = [{"uris":ids[i:i + SPOTIFY_IDS_CHUNKS]} for i in range(0, len(ids), SPOTIFY_IDS_CHUNKS)]
+    for chunk in data_chunks:
+        r = makeRequest("https://api.spotify.com/v1/users/" + auth.username + "/playlists/" + playlist_id + "/tracks", "post", 201, json=chunk, headers=headers)
     return playlist_id
 
 # Updates a spotify playlist
