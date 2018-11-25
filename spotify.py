@@ -1,10 +1,12 @@
 import requests, json, os
 from urllib.parse import quote
 
-# Client credentials
-# Make sure the redirect_uri has been whitelisted in your Spotify app's settings
-client_id = "b3031464e5b346f1bd8d6b6dc5c23619"
-client_secret = "6c83a27591604965a1722975e755c720"
+creds_file = "api_creds.json"
+with open(creds_file) as f:
+    data = json.loads(f.read())
+    client_id = data['spotify']['client_id']
+    client_secret = data['spotify']['client_secret']
+
 redirect_uri = "http://localhost/"
 auth_filename = "data/spotify_auth.json"
 
